@@ -1,0 +1,1215 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiche de révision T1</title>
+<style>
+/* Mise en page : colonne unique de lecture, cartes de notions en grille, atelier de série plein écran sur mobile.
+   Palette : bleu du projet (1F4E79), turquoise « énergie » pour les formules, vert/ambre/rouge réservés à l'état des réponses. */
+:root {
+  --bg: #F3F6FA; --surface: #FFFFFF; --surface-2: #E8EEF6; --ink: #13233A; --ink-2: #4A5B73; --line: #D3DCE8;
+  --accent: #1F4E79; --accent-ink: #FFFFFF; --accent-soft: #DCE8F5; --energy: #0B6E78; --energy-soft: #DDF1F2;
+  --good: #1B7F4B; --good-soft: #DDF3E6; --bad: #B02020; --bad-soft: #FBE3E3; --warn: #8A5700; --warn-soft: #FBEFD2;
+  --f-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-disp: 'Barlow Condensed', 'Arial Narrow', Impact, sans-serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1A2B; --surface: #17263B; --surface-2: #1E3150; --ink: #E6EDF7; --ink-2: #9FB0C7; --line: #2B3F5E;
+    --accent: #7FB2E8; --accent-ink: #0F1A2B; --accent-soft: #213A5C; --energy: #4FC3CC; --energy-soft: #153A44;
+    --good: #55C48A; --good-soft: #173A2A; --bad: #FF8A8A; --bad-soft: #4A2328; --warn: #F0B454; --warn-soft: #45351A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1A2B; --surface: #17263B; --surface-2: #1E3150; --ink: #E6EDF7; --ink-2: #9FB0C7; --line: #2B3F5E;
+  --accent: #7FB2E8; --accent-ink: #0F1A2B; --accent-soft: #213A5C; --energy: #4FC3CC; --energy-soft: #153A44;
+  --good: #55C48A; --good-soft: #173A2A; --bad: #FF8A8A; --bad-soft: #4A2328; --warn: #F0B454; --warn-soft: #45351A;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.55 var(--f-body); -webkit-text-size-adjust: 100%; }
+sub, sup { line-height: 0; font-size: .75em; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.wrap { max-width: 1040px; margin-inline: auto; padding-inline: 16px; padding-block: 14px 40px; }
+
+/* barre du haut */
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-block: 4px 14px; border-bottom: 1px solid var(--line); }
+.eyebrow { font: 500 12px/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+.tabs { display: flex; gap: 4px; }
+.tab { min-height: 40px; padding: 0 14px; border: 1px solid var(--line); background: var(--surface); border-radius: 6px; cursor: pointer; font-weight: 500; }
+.tab[aria-current="page"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+/* accueil */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px 32px; align-items: end; padding-block: 22px 18px; }
+.hero h1 { margin: 6px 0 6px; font: 700 clamp(34px, 6vw, 52px)/1 var(--f-disp); letter-spacing: .005em; text-transform: uppercase; text-wrap: balance; }
+.hero p { margin: 0; max-width: 56ch; color: var(--ink-2); }
+.score { text-align: right; }
+.score .row { justify-content: flex-end; }
+.score b { display: block; font: 700 54px/1 var(--f-disp); color: var(--accent); font-variant-numeric: tabular-nums; }
+.score span { font-size: 13px; color: var(--ink-2); }
+.score b small { font-size: .5em; color: var(--ink-2); }
+.note { margin: 0 0 14px; padding: 10px 14px; border-radius: 6px; background: var(--warn-soft); color: var(--ink); border: 1px solid var(--line); font-size: 14px; }
+.note.ok { background: var(--good-soft); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.card h2 { margin: 0; font: 700 25px/1.1 var(--f-disp); letter-spacing: .01em; text-wrap: balance; }
+.card p { margin: 0; color: var(--ink-2); font-size: 14px; }
+.meter { display: flex; align-items: center; gap: 10px; }
+.bar { flex: 1; height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 99px; background: var(--ink-2); }
+.bar.good i { background: var(--good); } .bar.warn i { background: var(--warn); } .bar.bad i { background: var(--bad); }
+.pct { font: 500 14px var(--f-mono); min-width: 4ch; text-align: right; font-variant-numeric: tabular-nums; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.pill { display: inline-block; padding: 2px 9px; border-radius: 99px; font-size: 12px; font-weight: 600; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-2); }
+.pill.good { background: var(--good-soft); color: var(--good); border-color: transparent; }
+.pill.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.pill.bad { background: var(--bad-soft); color: var(--bad); border-color: transparent; }
+.btn { min-height: 44px; padding: 0 18px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 600; cursor: pointer; }
+.btn:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn[disabled] { opacity: .45; cursor: not-allowed; filter: none; }
+.general { margin-top: 14px; flex-direction: row; display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; background: var(--accent-soft); border-color: transparent; }
+.general h2 { font-size: 25px; }
+.foot { margin-top: 32px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 12px; font-style: italic; color: var(--ink-2); }
+
+/* à retenir */
+.back { background: none; border: 0; padding: 8px 0; color: var(--accent); font-weight: 600; cursor: pointer; min-height: 40px; }
+.title { margin: 4px 0 16px; font: 700 clamp(30px, 5vw, 44px)/1.05 var(--f-disp); text-transform: uppercase; text-wrap: balance; }
+.sec { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+.sec h3 { margin: 0 0 8px; font: 600 12px/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+.sec p { margin: 6px 0; max-width: 70ch; }
+.f { margin: 6px 0; padding: 8px 12px; background: var(--energy-soft); color: var(--ink); border-radius: 6px; font: 500 15px/1.6 var(--f-mono); overflow-wrap: anywhere; }
+.tblwrap { overflow-x: auto; max-width: 100%; }
+table.rap { border-collapse: collapse; min-width: 420px; width: 100%; }
+table.rap th, table.rap td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+table.rap th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); }
+
+/* série */
+.qhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.qhead strong { font: 700 22px/1.1 var(--f-disp); text-transform: uppercase; letter-spacing: .01em; }
+.steps { display: flex; gap: 5px; margin-bottom: 14px; }
+.steps i { flex: 1; height: 8px; border-radius: 99px; background: var(--surface-2); }
+.steps i.cur { background: var(--accent); } .steps i.ok { background: var(--good); } .steps i.ko { background: var(--bad); }
+.q { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px 16px; }
+.q .kind { font: 500 12px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 8px; }
+.q p { margin: 0 0 10px; max-width: 68ch; font-size: 16px; }
+.opts { display: grid; gap: 8px; margin-top: 10px; }
+.opt { display: flex; gap: 12px; align-items: flex-start; text-align: left; width: 100%; min-height: 48px; padding: 10px 12px; background: var(--surface); border: 1.5px solid var(--line); border-radius: 6px; cursor: pointer; }
+.opt:hover:not([disabled]) { border-color: var(--accent); }
+.opt .l { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 600 13px var(--f-mono); background: var(--surface-2); }
+.opt.sel { border-color: var(--accent); background: var(--accent-soft); }
+.opt.right { border-color: var(--good); background: var(--good-soft); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opt .tag { margin-left: auto; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.ans { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+.ans label { font-weight: 600; }
+.ans input { width: 11ch; min-height: 44px; padding: 0 12px; border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); font: 500 17px var(--f-mono); }
+.ans input:focus-visible { border-color: var(--accent); }
+.unit { font: 500 16px var(--f-mono); color: var(--ink-2); }
+.fig { margin: 8px 0 12px; max-width: 560px; }
+.plot { width: 100%; height: auto; display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.plot .gm { stroke: var(--line); stroke-width: .5; opacity: .6; } .plot .gl { stroke: var(--line); stroke-width: 1; }
+.plot .ax { stroke: var(--ink-2); stroke-width: 1.5; } .plot .tk { fill: var(--ink-2); font: 11px var(--f-mono); } .plot .al { fill: var(--ink); font: 600 12px var(--f-body); }
+.plot .curve { stroke: var(--accent); stroke-width: 2.5; fill: none; } .plot .guide { stroke: var(--energy); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.plot .pt { fill: var(--surface); stroke: var(--accent); stroke-width: 2.5; } .plot .pl { fill: var(--ink); font: 700 13px var(--f-body); }
+.plot .area { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+table.plaque { border-collapse: collapse; margin: 6px 0 12px; min-width: 300px; }
+table.plaque th, table.plaque td { border: 1px solid var(--line); padding: 6px 12px; text-align: left; }
+table.plaque th { background: var(--surface-2); font-weight: 500; }
+table.plaque td { font: 500 15px var(--f-mono); }
+
+/* classement */
+.bank { display: flex; gap: 8px; flex-wrap: wrap; min-height: 48px; padding: 8px; border: 1.5px dashed var(--line); border-radius: 6px; margin-block: 8px 12px; }
+.chip { min-height: 40px; padding: 6px 12px; border: 1.5px solid var(--line); background: var(--surface); border-radius: 6px; cursor: grab; font-weight: 500; text-align: left; }
+.chip.sel { border-color: var(--accent); background: var(--accent-soft); }
+.chip.right { border-color: var(--good); background: var(--good-soft); } .chip.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 10px; }
+.zone { min-height: 112px; padding: 10px; border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); display: flex; flex-direction: column; gap: 8px; cursor: pointer; text-align: left; }
+.zone.over, .zone.armed:hover { border-color: var(--accent); background: var(--accent-soft); }
+.zone b { font: 600 13px var(--f-mono); letter-spacing: .04em; text-transform: uppercase; }
+.zone .in { display: flex; flex-wrap: wrap; gap: 6px; }
+.hintline { font-size: 13px; color: var(--ink-2); margin: 0; }
+
+
+.row.end { justify-content: flex-end; margin-top: 10px; }
+.ans input.wide { width: min(100%, 26ch); font: 500 16px var(--f-body); }
+.txt { width: 100%; margin: 6px 0 10px; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); font: 400 13px/1.55 var(--f-mono); resize: vertical; }
+
+/* retour */
+.fb { margin-top: 16px; padding: 14px 16px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface-2); }
+.fb.ok { background: var(--good-soft); } .fb.ko { background: var(--bad-soft); }
+.fb h4 { margin: 0 0 6px; font: 700 20px/1.1 var(--f-disp); text-transform: uppercase; letter-spacing: .02em; }
+.fb.ok h4 { color: var(--good); } .fb.ko h4 { color: var(--bad); }
+.fb p { margin: 6px 0; font-size: 15px; }
+.fb .sol { font-size: 15px; line-height: 1.75; overflow-wrap: anywhere; }
+.next { margin-top: 14px; display: flex; justify-content: flex-end; }
+.err { color: var(--bad); font-size: 14px; margin: 8px 0 0; }
+
+/* bilan */
+.big { font: 700 72px/1 var(--f-disp); color: var(--accent); font-variant-numeric: tabular-nums; }
+.rec { list-style: none; margin: 12px 0; padding: 0; display: grid; gap: 6px; }
+.rec li { display: flex; gap: 10px; align-items: baseline; padding: 8px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.rec .m { font: 700 13px var(--f-mono); min-width: 4.5em; }
+.rec .m.ok { color: var(--good); } .rec .m.ko { color: var(--bad); }
+
+/* suivi */
+.dash { overflow-x: auto; max-width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+table.dt { border-collapse: collapse; width: 100%; min-width: 760px; }
+table.dt th, table.dt td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+table.dt th { font: 500 11px/1.3 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); background: var(--surface-2); }
+table.dt td.c { text-align: center; font: 500 14px var(--f-mono); font-variant-numeric: tabular-nums; }
+.cell { white-space: nowrap; display: inline-block; min-width: 4.4ch; padding: 3px 8px; border-radius: 5px; background: var(--surface-2); }
+.cell.good { background: var(--good-soft); color: var(--good); } .cell.warn { background: var(--warn-soft); color: var(--warn); } .cell.bad { background: var(--bad-soft); color: var(--bad); }
+table.dt tr.avg td { font-weight: 600; background: var(--surface-2); }
+.dim { color: var(--ink-2); font-size: 13px; }
+table.dt td.c .dim { white-space: nowrap; }
+.hard { display: grid; gap: 6px; margin: 10px 0 0; padding: 0; list-style: none; }
+.hard li { display: flex; gap: 10px; align-items: baseline; padding: 8px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.hard .m { font: 700 13px var(--f-mono); color: var(--bad); min-width: 7ch; }
+.empty { padding: 28px 16px; text-align: center; background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; color: var(--ink-2); }
+
+@media (max-width: 560px) {
+  .hero { grid-template-columns: 1fr; } .score { text-align: left; }
+  .q { padding: 14px 12px; } .next .btn { width: 100%; }
+}
+@media (prefers-reduced-motion: no-preference) { .bar i, .steps i { transition: width .3s, background-color .2s; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>window.__STANDALONE = true;</script>
+<script>
+/* Banque de questions — séquence T1 (chaîne de puissance et énergie) */
+(function (root) {
+  'use strict';
+  const rnd = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const r2 = x => Math.round(x * 100) / 100;
+  const nf = (x, sig) => { if (!isFinite(x)) return '—'; const v = Number(Number(x).toPrecision(sig || 4)); return v.toLocaleString('fr-FR', { maximumFractionDigits: 6 }); };
+  const S = (a, b) => a + '<sub>' + b + '</sub>';
+
+  /* QCM à une bonne réponse (la première), options mélangées à chaque tirage */
+  const Q = (id, label, stem, good, bads, sol) => ({
+    id, label, kind: 'qcm',
+    make() {
+      const opts = shuffle([good].concat(bads).map((t, i) => ({ t, ok: i === 0 })));
+      return { html: '<p>' + stem + '</p>', options: opts.map(o => o.t), correct: opts.findIndex(o => o.ok), sol };
+    }
+  });
+
+  /* Tracé d'un graphique à l'échelle (SVG inline, couleurs par jetons CSS) */
+  function plot(o) {
+    const W = 520, H = 270, l = 54, r = 16, t = 14, b = 46;
+    const X = x => l + x / o.xmax * (W - l - r), Y = y => H - b - y / o.ymax * (H - t - b);
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + o.alt + '" class="plot">';
+    const ny = Math.round(o.ymax / o.sy), nx = Math.round(o.xmax / o.sx);
+    if (o.my) { const m = Math.round(o.ymax / o.my); for (let i = 0; i <= m; i++) s += '<line x1="' + l + '" x2="' + (W - r) + '" y1="' + Y(i * o.my) + '" y2="' + Y(i * o.my) + '" class="gm"/>'; }
+    for (let i = 0; i <= ny; i++) { const v = i * o.sy; s += '<line x1="' + l + '" x2="' + (W - r) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" class="gl"/><text x="' + (l - 7) + '" y="' + (Y(v) + 4) + '" text-anchor="end" class="tk">' + nf(v, 3) + '</text>'; }
+    for (let i = 0; i <= nx; i++) { const v = i * o.sx; s += '<line x1="' + X(v) + '" x2="' + X(v) + '" y1="' + t + '" y2="' + (H - b) + '" class="gl"/><text x="' + X(v) + '" y="' + (H - b + 16) + '" text-anchor="middle" class="tk">' + nf(v, 3) + '</text>'; }
+    s += o.draw(X, Y);
+    s += '<line x1="' + l + '" y1="' + (H - b) + '" x2="' + (W - r) + '" y2="' + (H - b) + '" class="ax"/><line x1="' + l + '" y1="' + t + '" x2="' + l + '" y2="' + (H - b) + '" class="ax"/>';
+    s += '<text x="' + ((l + W - r) / 2) + '" y="' + (H - 6) + '" text-anchor="middle" class="al">' + o.xl + '</text>';
+    s += '<text transform="translate(13 ' + ((t + H - b) / 2) + ') rotate(-90)" text-anchor="middle" class="al">' + o.yl + '</text>';
+    return s + '</svg>';
+  }
+
+  /* ---------- 1. Lois de Kirchhoff ---------- */
+  const RV = [47, 100, 150, 220, 330, 470, 680, 1000];
+  const kir = [
+    {
+      id: 'k1', label: 'Résistances en série', kind: 'num', make() {
+        const a = pick(RV), b = pick(RV), c = pick(RV), s = a + b + c, p = 1 / (1 / a + 1 / b + 1 / c);
+        return { html: `<p>Trois résistors de ${a} Ω, ${b} Ω et ${c} Ω sont associés <strong>en série</strong>. Calcule la résistance équivalente.</p>`, unit: 'Ω', ans: s, tol: .02,
+          sol: `${S('R', 'eq')} = ${S('R', 1)} + ${S('R', 2)} + ${S('R', 3)} = ${a} + ${b} + ${c} = <b>${nf(s)} Ω</b>`,
+          traps: [{ v: p, msg: 'Cette valeur correspond à une association en parallèle. En série, les résistances s’additionnent.' }] };
+      }
+    },
+    {
+      id: 'k2', label: 'Résistances en parallèle', kind: 'num', make() {
+        const L = [100, 150, 220, 330, 470, 1000]; const a = pick(L), b = pick(L), p = a * b / (a + b);
+        return { html: `<p>Deux résistors de ${a} Ω et ${b} Ω sont montés <strong>en parallèle</strong>. Calcule la résistance équivalente.</p>`, unit: 'Ω', ans: p, tol: .02,
+          sol: `${S('R', 'eq')} = ${S('R', 1)}·${S('R', 2)} / (${S('R', 1)} + ${S('R', 2)}) = ${a}×${b} / ${a + b} = <b>${nf(p)} Ω</b>`,
+          traps: [{ v: a + b, msg: 'Tu as additionné les résistances : c’est la formule de l’association en série.' }, { v: (a + b) / 2, msg: 'Ce n’est pas une moyenne. Pour deux résistances en parallèle : R₁·R₂ / (R₁ + R₂).' }] };
+      }
+    },
+    {
+      id: 'k3', label: 'Loi des nœuds', kind: 'num', make() {
+        const i1 = rnd(2, 20) * 10, i2 = rnd(2, 20) * 10, i3 = rnd(1, Math.floor((i1 + i2) / 10) - 1) * 10, i4 = i1 + i2 - i3;
+        return { html: `<p>À un nœud arrivent deux courants : ${S('i', 1)} = ${i1} mA et ${S('i', 2)} = ${i2} mA. Deux courants en repartent : ${S('i', 3)} = ${i3} mA et ${S('i', 4)}. Calcule ${S('i', 4)}.</p>`, unit: 'mA', ans: i4, tol: .01,
+          sol: `Loi des nœuds : ${S('i', 1)} + ${S('i', 2)} = ${S('i', 3)} + ${S('i', 4)}, donc ${S('i', 4)} = ${i1} + ${i2} − ${i3} = <b>${i4} mA</b>`,
+          traps: [{ v: i1 + i2 + i3, msg: 'Tu as additionné tous les courants. Il faut écrire : somme des courants entrants = somme des courants sortants.' }] };
+      }
+    },
+    {
+      id: 'k4', label: 'Loi des mailles', kind: 'num', make() {
+        let E, U1, U2; do { E = pick([9, 12, 15, 24]); U1 = pick([1.5, 2, 3, 4, 5, 6]); U2 = pick([1, 2.5, 3, 4, 5, 7]); } while (E - U1 - U2 < .4);
+        const U3 = r2(E - U1 - U2);
+        return { html: `<p>Une source de tension E = ${nf(E)} V alimente en série trois dipôles. On mesure ${S('U', 1)} = ${nf(U1)} V et ${S('U', 2)} = ${nf(U2)} V. Calcule ${S('U', 3)}, tension aux bornes du troisième dipôle.</p>`, unit: 'V', ans: U3, tol: .01,
+          sol: `Loi des mailles : E − ${S('U', 1)} − ${S('U', 2)} − ${S('U', 3)} = 0, donc ${S('U', 3)} = ${nf(E)} − ${nf(U1)} − ${nf(U2)} = <b>${nf(U3)} V</b>`,
+          traps: [{ v: E + U1 + U2, msg: 'Tu as additionné les trois tensions. La source E est orientée en sens inverse des tensions des dipôles : E − U₁ − U₂ − U₃ = 0.' }, { v: r2(U1 + U2), msg: 'Tu as oublié la source : la somme algébrique inclut E.' }] };
+      }
+    },
+    {
+      id: 'k5', label: 'Pont diviseur de tension', kind: 'num', make() {
+        const L = [1000, 2200, 3300, 4700, 10000]; const U = pick([5, 9, 12, 24]); let a = pick(L), b = pick(L); while (b === a) b = pick(L);
+        const u2 = U * b / (a + b), u1 = U * a / (a + b);
+        return { html: `<p>Un pont diviseur est formé de ${S('R', 1)} = ${a} Ω et ${S('R', 2)} = ${b} Ω en série, alimentées sous U = ${U} V. Aucun courant n’est prélevé au point milieu. Calcule la tension ${S('U', 2)} aux bornes de ${S('R', 2)}.</p>`, unit: 'V', ans: u2, tol: .02,
+          sol: `${S('U', 2)} = U × ${S('R', 2)} / (${S('R', 1)} + ${S('R', 2)}) = ${U} × ${b} / ${a + b} = <b>${nf(u2)} V</b>`,
+          traps: [{ v: u1, msg: 'Tu as pris R₁ au numérateur. La tension aux bornes de R₂ est proportionnelle à R₂.' }] };
+      }
+    },
+    {
+      id: 'k6', label: 'Puissance dissipée par effet Joule', kind: 'num', make() {
+        const R = pick([10, 22, 47, 100, 220]), imA = pick([50, 100, 200, 300, 500]), I = imA / 1000, P = R * I * I;
+        return { html: `<p>Un résistor de ${R} Ω est parcouru par un courant de ${imA} mA. Calcule la puissance qu’il dissipe.</p>`, unit: 'W', ans: P, tol: .02,
+          sol: `P = R × I² = ${R} × (${nf(I)})² = <b>${nf(P)} W</b> (le courant doit être converti en ampères)`,
+          traps: [{ v: R * I, msg: 'Tu as oublié le carré : P = R × I².' }, { v: R * imA * imA, msg: 'Pense à convertir les mA en A avant de calculer.' }] };
+      }
+    },
+    {
+      id: 'k7', label: 'Pont diviseur de courant', kind: 'num', make() {
+        const I = pick([.6, 1, 1.2, 2]), L = [10, 22, 47, 100]; let a = pick(L), b = pick(L); while (b === a) b = pick(L);
+        const i1 = I * b / (a + b), i2 = I * a / (a + b);
+        return { html: `<p>Un courant total I = ${nf(I)} A se répartit entre deux résistors en parallèle : ${S('R', 1)} = ${a} Ω et ${S('R', 2)} = ${b} Ω. Calcule le courant ${S('I', 1)} dans ${S('R', 1)}.</p>`, unit: 'A', ans: i1, tol: .02,
+          sol: `${S('I', 1)} = I × ${S('R', 2)} / (${S('R', 1)} + ${S('R', 2)}) = ${nf(I)} × ${b} / ${a + b} = <b>${nf(i1)} A</b>`,
+          traps: [{ v: i2, msg: 'Le courant se répartit en sens inverse des résistances : la branche la moins résistante prend le plus de courant.' }] };
+      }
+    },
+    {
+      id: 'k8', label: 'Courant dans deux résistors en série', kind: 'num', make() {
+        const E = pick([5, 9, 12, 24]), a = pick(RV), b = pick(RV), I = E / (a + b) * 1000;
+        return { html: `<p>Une source E = ${E} V alimente deux résistors en série : ${S('R', 1)} = ${a} Ω et ${S('R', 2)} = ${b} Ω. Calcule le courant dans le circuit.</p>`, unit: 'mA', ans: I, tol: .02,
+          sol: `${S('R', 'eq')} = ${a + b} Ω, donc I = E / ${S('R', 'eq')} = ${E} / ${a + b} = ${nf(I / 1000)} A = <b>${nf(I)} mA</b>`,
+          traps: [{ v: E / a * 1000, msg: 'Tu as oublié R₂. Les deux résistors sont traversés par le même courant : utilise la résistance équivalente.' }] };
+      }
+    },
+    Q('kq1', 'Définition d’un nœud', 'Dans un réseau électrique, qu’est-ce qu’un <strong>nœud</strong> ?', 'Un point où aboutissent au moins trois dipôles', ['Un point où aboutissent exactement deux dipôles', 'Un contour fermé constitué de plusieurs branches', 'Un ensemble de dipôles placés en série entre deux points'], 'Un nœud relie au moins trois branches. Un contour fermé est une maille ; des dipôles en série forment une branche.'),
+    Q('kq2', 'Énoncé de la loi des mailles', 'Quelle écriture traduit la <strong>loi des mailles</strong> ?', 'Σ ± U = 0 le long d’une maille, avec un sens de parcours choisi', ['Σ ± I = 0 le long d’une maille', 'U = R × I pour chaque maille', 'La somme des tensions est égale à la somme des courants'], 'La loi des mailles est une somme algébrique de tensions nulle (+ si la flèche suit le sens de parcours, − sinon).'),
+    Q('kq3', 'Nombre d’équations aux nœuds', 'Un réseau comporte 4 nœuds. Combien d’équations <strong>indépendantes</strong> la loi des nœuds fournit-elle ?', '3', ['4', '2', '1'], 'Avec n nœuds on obtient n − 1 équations indépendantes (la dernière se déduit des autres).'),
+    Q('kq4', 'Courant de signe négatif', 'En résolvant un réseau, tu trouves I<sub>1</sub> = −5 A. Que signifie le signe négatif ?', 'Le sens réel du courant est l’inverse du sens choisi au départ', ['Le calcul est faux et il faut recommencer', 'Le courant est nul', 'La branche contient une source en court-circuit'], 'Le sens des courants est choisi arbitrairement. Un résultat négatif indique simplement le sens inverse ; le calcul reste correct.'),
+    Q('kq5', 'Résistance équivalente en parallèle', 'Deux résistors sont montés en parallèle. La résistance équivalente est…', 'inférieure à la plus petite des deux résistances', ['égale à la somme des deux résistances', 'comprise entre les deux résistances', 'supérieure à la plus grande des deux résistances'], 'En parallèle, 1/R<sub>eq</sub> = 1/R<sub>1</sub> + 1/R<sub>2</sub> : R<sub>eq</sub> est toujours plus petite que la plus petite des résistances.'),
+    Q('kq6', 'Condition du pont diviseur', 'À quelle condition le pont diviseur de tension donne-t-il le bon résultat ?', 'Aucun courant n’est prélevé au point milieu', ['Les deux résistances sont égales', 'La tension d’alimentation est inférieure à 12 V', 'Le circuit comporte au moins trois mailles'], 'Le pont diviseur suppose que les deux résistances sont traversées par le même courant, donc qu’aucune charge n’est branchée au point milieu.'),
+    Q('kq7', 'Définition d’une branche', 'Qu’est-ce qu’une <strong>branche</strong> ?', 'Un ensemble de dipôles en série entre deux nœuds consécutifs', ['Un contour fermé parcouru une seule fois', 'Un point reliant au moins trois dipôles', 'Un dipôle unique branché sur la source'], 'Une branche est parcourue par un seul courant. On associe une inconnue de courant à chaque branche.'),
+    Q('kq8', 'Nombre d’inconnues', 'Un réseau compte 3 branches. Combien y a-t-il d’inconnues de courant, et donc d’équations indépendantes à écrire ?', '3 inconnues, 3 équations', ['2 inconnues, 2 équations', '3 inconnues, 6 équations', '1 inconnue, 1 équation'], 'Il y a un courant par branche, donc autant d’équations indépendantes que de branches (nœuds + mailles).')
+  ];
+
+  /* ---------- 2. Énergie et puissance ---------- */
+  const DOM = [
+    { d: 'Mécanique de translation', e: 'Force (N)', f: 'Vitesse (m/s)' },
+    { d: 'Mécanique de rotation', e: 'Couple (N·m)', f: 'Vitesse angulaire (rad/s)' },
+    { d: 'Hydraulique', e: 'Pression (Pa)', f: 'Débit volumique (m³/s)' },
+    { d: 'Électrique (courant continu)', e: 'Tension (V)', f: 'Intensité (A)' }
+  ];
+  const enp = [
+    {
+      id: 'e1', label: 'Énergie = puissance × durée', kind: 'num', make() {
+        const P = pick([40, 60, 100, 250, 800, 1500]), t = pick([1.5, 2, 3, 4, 6]), E = P * t;
+        return { html: `<p>Un appareil de ${nf(P)} W fonctionne pendant ${nf(t)} h. Calcule l’énergie consommée en wattheures.</p>`, unit: 'Wh', ans: E, tol: .01,
+          sol: `E = P × t = ${nf(P)} × ${nf(t)} = <b>${nf(E)} Wh</b> (avec t en heures, on obtient directement des Wh)`,
+          traps: [{ v: E * 3600, msg: 'Ce résultat est en joules (durée en secondes). La question demande des Wh : garde la durée en heures.' }] };
+      }
+    },
+    {
+      id: 'e2', label: 'Conversion Wh → J', kind: 'num', make() {
+        const E = pick([0.5, 2, 10, 25, 60]);
+        return { html: `<p>Une batterie stocke ${nf(E)} Wh. Exprime cette énergie en joules.</p>`, unit: 'J', ans: E * 3600, tol: .01,
+          sol: `1 Wh = 3600 J, donc ${nf(E)} Wh = ${nf(E)} × 3600 = <b>${nf(E * 3600)} J</b>`, traps: [{ v: E / 3600, msg: 'Tu as divisé par 3600 : pour passer des Wh aux J, on multiplie.' }] };
+      }
+    },
+    {
+      id: 'e3', label: 'Conversion J → Wh', kind: 'num', make() {
+        const Wh = pick([0.5, 1.5, 2, 5, 12, 20]), J = Wh * 3600;
+        return { html: `<p>Un moteur consomme ${nf(J)} J. Exprime cette énergie en wattheures.</p>`, unit: 'Wh', ans: Wh, tol: .01,
+          sol: `1 Wh = 3600 J, donc ${nf(J)} J = ${nf(J)} / 3600 = <b>${nf(Wh)} Wh</b>`, traps: [{ v: J * 3600, msg: 'Tu as multiplié par 3600 : pour passer des J aux Wh, on divise.' }] };
+      }
+    },
+    {
+      id: 'e4', label: 'Puissance = énergie / durée', kind: 'num', make() {
+        const P = pick([5, 12, 40, 60, 150]), t = pick([10, 30, 60, 120]), E = P * t;
+        return { html: `<p>Un système fournit ${nf(E)} J en ${t} s. Calcule la puissance moyenne.</p>`, unit: 'W', ans: P, tol: .01,
+          sol: `P = E / t = ${nf(E)} / ${t} = <b>${nf(P)} W</b> (1 W = 1 J/s)`, traps: [{ v: E * t, msg: 'Tu as multiplié E par t. La puissance est un débit d’énergie : P = E / t.' }] };
+      }
+    },
+    {
+      id: 'e5', label: 'Calcul d’un rendement', kind: 'num', make() {
+        const Pe = pick([80, 120, 200, 500, 1000]), eta = pick([.55, .6, .7, .75, .8, .85, .9]), Ps = Pe * eta;
+        return { html: `<p>Un convertisseur absorbe ${nf(Pe)} W et restitue ${nf(Ps)} W en sortie. Calcule son rendement, en pourcentage.</p>`, unit: '%', ans: eta * 100, tol: .02,
+          sol: `η = P<sub>s</sub> / P<sub>e</sub> = ${nf(Ps)} / ${nf(Pe)} = ${nf(eta)} soit <b>${nf(eta * 100)} %</b>`, traps: [{ v: (1 - eta) * 100, msg: 'Tu as calculé la part des pertes. Le rendement est P sortie / P entrée.' }] };
+      }
+    },
+    {
+      id: 'e6', label: 'Puissance perdue', kind: 'num', make() {
+        const Pe = pick([80, 120, 200, 500, 1000]), eta = pick([.55, .6, .7, .75, .8, .85, .9]), Pp = Pe * (1 - eta);
+        return { html: `<p>Un réducteur de rendement ${nf(eta)} reçoit ${nf(Pe)} W. Quelle puissance est dissipée sous forme de pertes (chaleur, bruit) ?</p>`, unit: 'W', ans: Pp, tol: .02,
+          sol: `P<sub>s</sub> = η × P<sub>e</sub> = ${nf(eta)} × ${nf(Pe)} = ${nf(Pe * eta)} W ; pertes = P<sub>e</sub> − P<sub>s</sub> = <b>${nf(Pp)} W</b>`, traps: [{ v: Pe * eta, msg: 'Cette valeur est la puissance utile en sortie. Les pertes sont P entrée − P sortie.' }] };
+      }
+    },
+    {
+      id: 'e7', label: 'Rendement global', kind: 'num', make() {
+        const L = [.95, .9, .85, .8, .7], a = pick(L), b = pick(L), c = pick(L), g = a * b * c;
+        return { html: `<p>Une chaîne de puissance comporte trois éléments en cascade, de rendements ${nf(a)}, ${nf(b)} et ${nf(c)}. Calcule le rendement global, en pourcentage.</p>`, unit: '%', ans: g * 100, tol: .02,
+          sol: `η<sub>global</sub> = η<sub>1</sub> × η<sub>2</sub> × η<sub>3</sub> = ${nf(a)} × ${nf(b)} × ${nf(c)} = ${nf(g)} soit <b>${nf(g * 100)} %</b>`, traps: [{ v: (a + b + c) / 3 * 100, msg: 'Les rendements ne se moyennent pas : le rendement global est leur produit.' }] };
+      }
+    },
+    {
+      id: 'e11', label: 'Puissance à fournir en entrée', kind: 'num', make() {
+        const Ps = pick([.13, .2, .5, 1.2, 2.5, 12]), a = pick([.6, .7, .81, .9, .95]), b = pick([.6, .7, .81, .9, .95]), Pe = Ps / (a * b);
+        return { html: `<p>Un piston doit recevoir ${nf(Ps)} W. La transmission est formée de deux étages de rendements ${nf(a)} et ${nf(b)}. Quelle puissance faut-il fournir en entrée de la transmission ?</p>`, unit: 'W', ans: Pe, tol: .02,
+          sol: `η<sub>global</sub> = ${nf(a)} × ${nf(b)} = ${nf(a * b)} ; P<sub>e</sub> = P<sub>s</sub> / η<sub>global</sub> = ${nf(Ps)} / ${nf(a * b)} = <b>${nf(Pe)} W</b>`, traps: [{ v: Ps * a * b, msg: 'Tu as multiplié au lieu de diviser. La puissance d’entrée est supérieure à celle de sortie.' }] };
+      }
+    },
+    Q('eq1', 'Unités de l’énergie', 'Parmi ces unités, lesquelles mesurent une <strong>énergie</strong> ?', 'Le joule (J) et le wattheure (Wh)', ['Le watt (W) et le joule par seconde', 'L’ampère (A) et le volt (V)', 'Le wattheure (Wh) et le watt (W)'], 'L’énergie se mesure en J ou en Wh. Le watt mesure une puissance (1 W = 1 J/s).'),
+    Q('eq2', '1 Wh en joules', 'Combien de joules y a-t-il dans <strong>1 Wh</strong> ?', '3 600 J', ['60 J', '360 J', '3,6 J'], '1 Wh = 1 W × 3600 s = 3600 J.'),
+    Q('eq3', 'Sens physique de la puissance', 'Deux systèmes fournissent la même énergie, mais l’un est plus puissant. Que peut-on dire ?', 'Il fournit cette énergie plus rapidement', ['Il consomme moins d’énergie', 'Il a un meilleur rendement', 'Il fournit plus d’énergie'], 'La puissance est un débit d’énergie : P = E / t. À énergie égale, plus de puissance signifie moins de temps.'),
+    Q('eq4', 'Nature du rendement', 'Le rendement η d’un mécanisme est…', 'un nombre sans unité compris entre 0 et 1', ['une puissance exprimée en watts', 'un nombre toujours supérieur à 1', 'une énergie exprimée en joules'], 'η = énergie (ou puissance) de sortie / énergie (ou puissance) d’entrée. Il est inférieur à 1 à cause des pertes.'),
+    Q('eq5', 'Rendement de plusieurs éléments en cascade', 'Pour une chaîne d’énergie, le rendement global est…', 'le produit des rendements de chaque élément', ['la somme des rendements', 'la moyenne des rendements', 'le rendement du premier élément seulement'], 'Chaque élément prélève sa part de pertes : η<sub>global</sub> = η<sub>1</sub> × η<sub>2</sub> × …'),
+  ];
+
+  /* ---------- 3. Chaîne de puissance ---------- */
+  const FONC = {
+    'Alimenter': ['Panneaux photovoltaïques', 'Batterie LiPo', 'Pile', 'Réseau électrique 230 V', 'Réservoir de carburant'],
+    'Distribuer': ['Régulateur MPPT', 'Variateur de vitesse', 'Hacheur', 'Contacteur', 'Relais'],
+    'Convertir': ['Moteur à courant continu', 'Moteur pas à pas', 'Moteur brushless', 'Vérin pneumatique'],
+    'Transmettre': ['Réducteur à engrenages', 'Courroie crantée', 'Hélices', 'Excentrique', 'Pignon-crémaillère', 'Vis-écrou']
+  };
+  const INFO = ['Codeur incrémental', 'Carte microcontrôleur', 'Adaptateur de communication', 'Capteur de distance', 'Récepteur radio', 'Écran afficheur', 'Capteur de température'];
+  const PUIS = ['Hacheur', 'Motoréducteur', 'Plateau rotatif', 'Pile LiPo', 'Variateur de vitesse', 'Moteur à courant continu', 'Panneaux photovoltaïques'];
+  const ATC = {
+    'Acquérir': ['Capteur de distance', 'Codeur incrémental', 'Bouton poussoir', 'Thermistance'],
+    'Traiter': ['Carte microcontrôleur', 'Automate programmable', 'Calculateur'],
+    'Communiquer': ['Écran afficheur', 'Voyant', 'Module radio', 'Buzzer']
+  };
+  const classFrom = (map, perCat, intro) => () => {
+    const cats = Object.keys(map), items = [];
+    cats.forEach((c, k) => shuffle(map[c]).slice(0, perCat).forEach(t => items.push({ t, c: k })));
+    return { html: '<p>' + intro + '</p>', cats, items: shuffle(items), sol: cats.map(c => `<b>${c}</b> : ` + items.filter(i => cats[i.c] === c).map(i => i.t).join(', ')).join('<br>') };
+  };
+  const chp = [
+    { id: 'c1', label: 'Fonctions de la chaîne de puissance', kind: 'class', make: classFrom(FONC, 2, 'Classe chaque constituant dans la <strong>fonction</strong> de la chaîne de puissance qu’il assure.') },
+    {
+      id: 'c2', label: 'Chaîne d’information ou de puissance', kind: 'class', make() {
+        const cats = ['Chaîne d’information', 'Chaîne de puissance'], items = shuffle(INFO).slice(0, 3).map(t => ({ t, c: 0 })).concat(shuffle(PUIS).slice(0, 3).map(t => ({ t, c: 1 })));
+        return { html: '<p>Classe chaque constituant dans la <strong>chaîne</strong> à laquelle il appartient.</p>', cats, items: shuffle(items), sol: cats.map((c, k) => `<b>${c}</b> : ` + items.filter(i => i.c === k).map(i => i.t).join(', ')).join('<br>') };
+      }
+    },
+    { id: 'c3', label: 'Acquérir, traiter, communiquer', kind: 'class', make: classFrom(ATC, 2, 'Dans la <strong>chaîne d’information</strong>, classe chaque constituant selon sa fonction.') },
+    {
+      id: 'c4', label: 'Puissance à recevoir en entrée de la chaîne', kind: 'num', make() {
+        const pv = pick([.18, .2, .22]), rg = pick([.95, .97]), mo = pick([.85, .9]), he = pick([.6, .62, .65]), Pp = pick([350, 700, 1400]), g = pv * rg * mo * he, Pr = Pp / g;
+        return { html: `<p>Chaîne de propulsion d’un bateau solaire : panneaux photovoltaïques (η = ${nf(pv)}) → régulateur MPPT (η = ${nf(rg)}) → moteur (η = ${nf(mo)}) → hélices (η = ${nf(he)}). La puissance de poussée utile vaut ${nf(Pp)} W. Quelle puissance les panneaux doivent-ils recevoir du soleil ?</p>`, unit: 'W', ans: Pr, tol: .02,
+          sol: `η<sub>global</sub> = ${nf(pv)} × ${nf(rg)} × ${nf(mo)} × ${nf(he)} = ${nf(g)} ; P<sub>reçue</sub> = P<sub>poussée</sub> / η<sub>global</sub> = ${nf(Pp)} / ${nf(g)} = <b>${nf(Pr)} W</b>`, traps: [{ v: Pp * g, msg: 'Tu as multiplié par le rendement global. On remonte la chaîne : la puissance reçue est plus grande que la puissance utile, donc on divise.' }] };
+      }
+    },
+    {
+      id: 'c5', label: 'Puissance au niveau du moteur', kind: 'num', make() {
+        const he = pick([.6, .62, .65, .7]), Pp = pick([350, 700, 1400]), Pm = Pp / he;
+        return { html: `<p>Une hélice de rendement ${nf(he)} doit délivrer une puissance de poussée de ${nf(Pp)} W. Quelle puissance mécanique le moteur doit-il lui fournir ?</p>`, unit: 'W', ans: Pm, tol: .02,
+          sol: `P<sub>moteur</sub> = P<sub>poussée</sub> / η<sub>hélice</sub> = ${nf(Pp)} / ${nf(he)} = <b>${nf(Pm)} W</b>`, traps: [{ v: Pp * he, msg: 'La puissance fournie à l’hélice est supérieure à celle qu’elle restitue : il faut diviser par le rendement.' }] };
+      }
+    },
+    Q('cq1', 'Rôle du moteur', 'Dans une chaîne de puissance, quelle fonction assure un moteur électrique ?', 'Convertir l’énergie électrique en énergie mécanique', ['Distribuer l’énergie électrique', 'Transmettre le mouvement en adaptant la vitesse', 'Acquérir la vitesse de rotation'], 'Le moteur est le convertisseur de la chaîne : électrique → mécanique (et un peu de chaleur).'),
+    Q('cq2', 'Ordre des fonctions', 'Quel est l’ordre des fonctions de la chaîne de puissance, de la source vers l’action ?', 'Alimenter → Distribuer → Convertir → Transmettre', ['Distribuer → Alimenter → Transmettre → Convertir', 'Convertir → Alimenter → Distribuer → Transmettre', 'Alimenter → Convertir → Distribuer → Transmettre'], 'L’énergie est d’abord fournie par la source, distribuée (variateur, relais), convertie (moteur) puis transmise (réducteur, hélice) à l’effecteur.'),
+    Q('cq3', 'Rôle d’un variateur', 'Un variateur de vitesse ou un hacheur appartient à quelle fonction de la chaîne de puissance ?', 'Distribuer', ['Alimenter', 'Convertir', 'Acquérir'], 'Il dose l’énergie envoyée au moteur à partir de la source : il distribue.'),
+    Q('cq4', 'Liens de puissance', 'Que décrit-on sur chaque lien entre deux blocs de la chaîne de puissance ?', 'Une grandeur d’effort et une grandeur de flux, avec leurs unités', ['Uniquement le rendement du bloc suivant', 'Un signal logique transmis par la chaîne d’information', 'La masse du composant'], 'Le produit effort × flux donne la puissance échangée entre les deux blocs.'),
+    Q('cq5', 'Rôle d’un réducteur', 'Un réducteur à engrenages assure quelle fonction ?', 'Transmettre le mouvement en adaptant vitesse et couple', ['Convertir l’énergie électrique en énergie mécanique', 'Alimenter le moteur', 'Acquérir la position de l’arbre'], 'Il reçoit une rotation et en restitue une autre : c’est une fonction de transmission.'),
+    Q('cq6', 'Fonctions de la chaîne d’information', 'Quelles sont les trois fonctions de la chaîne d’information ?', 'Acquérir, traiter, communiquer', ['Alimenter, distribuer, convertir', 'Convertir, transmettre, agir', 'Mesurer, amplifier, stocker'], 'Les capteurs acquièrent, le calculateur traite, les interfaces communiquent (ordres vers la chaîne de puissance, affichage, radio…).')
+  ];
+
+
+  /* ---------- 2 bis. Grandeurs d'effort et de flux ---------- */
+  const LIENS = {
+    'Électrique': ['Entre la batterie et le variateur de vitesse', 'Entre le variateur et le moteur à courant continu', 'Entre le panneau photovoltaïque et le régulateur'],
+    'Mécanique de rotation': ['Sur l’arbre du moteur', 'En sortie du réducteur à engrenages', 'Sur l’arbre d’une hélice'],
+    'Mécanique de translation': ['Entre la tige d’un vérin et sa charge', 'Entre la crémaillère et la charge', 'Entre les roues et la route'],
+    'Hydraulique': ['Entre la pompe et le vérin hydraulique', 'Dans le circuit d’huile d’un vérin']
+  };
+  const efl = [
+    {
+      id: 'ef1', label: 'Effort ou flux ?', kind: 'class', make() {
+        const E = ['Force', 'Tension électrique', 'Pression', 'Couple', 'Température'], F = ['Vitesse linéaire', 'Intensité du courant', 'Débit volumique', 'Vitesse angulaire', 'Flux thermique'];
+        const items = shuffle(E).slice(0, 3).map(t => ({ t, c: 0 })).concat(shuffle(F).slice(0, 3).map(t => ({ t, c: 1 })));
+        const cats = ['Grandeur d’effort', 'Grandeur de flux'];
+        return { html: '<p>Classe chaque grandeur physique : est-ce une <strong>grandeur d’effort</strong> ou une <strong>grandeur de flux</strong> ?</p>', cats, items: shuffle(items), sol: cats.map((c, k) => `<b>${c}</b> : ` + items.filter(i => i.c === k).map(i => i.t).join(', ')).join('<br>') + '<br>L’effort « tend à déplacer » la matière, le flux traduit ce déplacement (le « débit »).' };
+      }
+    },
+    { id: 'ef3', label: 'Domaine d’un lien de puissance', kind: 'class', make: classFrom(LIENS, 1, 'Pour chaque lien d’une chaîne de puissance, indique le <strong>domaine physique</strong> de la puissance qui y circule.') },
+    {
+      id: 'ef4', label: 'Effort ou flux manquant', kind: 'num', make() {
+        const flux = Math.random() < .5, d = pick(['el', 'tr', 'ro', 'hy']);
+        let html, unit, ans, sol, trap;
+        if (d === 'el') {
+          const U = pick([6, 12, 24, 48]), I = pick([.5, 1, 2, 5]), P = U * I;
+          if (flux) { html = `Un récepteur électrique absorbe ${nf(P)} W sous ${U} V. Calcule l’intensité I du courant (grandeur de flux).`; unit = 'A'; ans = I; sol = `P = U × I donc I = P / U = ${nf(P)} / ${U} = <b>${nf(I)} A</b>`; trap = { v: P * U, msg: 'Tu as multiplié. Pour trouver un facteur du produit, on divise la puissance par l’autre facteur.' }; }
+          else { html = `Un récepteur électrique absorbe ${nf(P)} W avec un courant de ${nf(I)} A. Calcule la tension U (grandeur d’effort).`; unit = 'V'; ans = U; sol = `P = U × I donc U = P / I = ${nf(P)} / ${nf(I)} = <b>${nf(U)} V</b>`; trap = { v: P * I, msg: 'Tu as multiplié. Pour trouver un facteur du produit, on divise la puissance par l’autre facteur.' }; }
+        } else if (d === 'tr') {
+          const F = pick([50, 200, 500, 1200]), v = pick([.5, 1, 2, 4]), P = F * v;
+          if (flux) { html = `Une charge est déplacée avec une force de ${nf(F)} N. La puissance mécanique transmise est de ${nf(P)} W. Calcule la vitesse V de la charge (grandeur de flux).`; unit = 'm/s'; ans = v; sol = `P = F × V donc V = P / F = ${nf(P)} / ${nf(F)} = <b>${nf(v)} m/s</b>`; trap = { v: P * F, msg: 'Tu as multiplié. Pour trouver la vitesse, divise la puissance par la force.' }; }
+          else { html = `Une charge avance à ${nf(v)} m/s avec une puissance mécanique de ${nf(P)} W. Calcule la force F exercée (grandeur d’effort).`; unit = 'N'; ans = F; sol = `P = F × V donc F = P / V = ${nf(P)} / ${nf(v)} = <b>${nf(F)} N</b>`; trap = { v: P * v, msg: 'Tu as multiplié. Pour trouver la force, divise la puissance par la vitesse.' }; }
+        } else if (d === 'ro') {
+          const C = pick([.1, .5, 2, 5]), w = pick([20, 50, 100, 200]), P = C * w;
+          if (flux) { html = `Un arbre transmet un couple de ${nf(C)} N·m et une puissance de ${nf(P)} W. Calcule sa vitesse angulaire Ω en rad/s (grandeur de flux).`; unit = 'rad/s'; ans = w; sol = `P = C × Ω donc Ω = P / C = ${nf(P)} / ${nf(C)} = <b>${nf(w)} rad/s</b>`; trap = { v: P * C, msg: 'Tu as multiplié. Pour trouver Ω, divise la puissance par le couple.' }; }
+          else { html = `Un arbre tourne à ${nf(w)} rad/s en transmettant ${nf(P)} W. Calcule le couple C (grandeur d’effort), en N·m.`; unit = 'N·m'; ans = C; sol = `P = C × Ω donc C = P / Ω = ${nf(P)} / ${nf(w)} = <b>${nf(C)} N·m</b>`; trap = { v: P * w, msg: 'Tu as multiplié. Pour trouver le couple, divise la puissance par la vitesse angulaire.' }; }
+        } else {
+          const p = pick([2, 5, 8, 10]), Q = pick([6, 12, 30, 60]), P = p * Q * 5 / 3;
+          if (flux) { html = `Un circuit hydraulique transmet ${nf(P)} W sous une pression de ${p} bar. Calcule le débit volumique Q (grandeur de flux) en L/min. (1 bar = 10<sup>5</sup> Pa ; 1 m³/s = 60 000 L/min)`; unit = 'L/min'; ans = Q; sol = `p = ${p}×10<sup>5</sup> Pa ; Q = P / p = ${nf(P)} / ${nf(p * 1e5)} = ${nf(P / (p * 1e5), 3)} m³/s, soit ×60 000 = <b>${nf(Q)} L/min</b>`; trap = { v: P / p, msg: 'Convertis la pression en pascals (1 bar = 10⁵ Pa), puis le débit de m³/s en L/min (× 60 000).' }; }
+          else { html = `Une pompe délivre un débit de ${nf(Q)} L/min et transmet ${nf(P)} W. Calcule la pression p (grandeur d’effort) en bar. (1 bar = 10<sup>5</sup> Pa ; 1 m³/s = 60 000 L/min)`; unit = 'bar'; ans = p; sol = `Q = ${nf(Q)} / 60 000 = ${nf(Q / 60000, 3)} m³/s ; p = P / Q = ${nf(P)} / ${nf(Q / 60000, 3)} = ${nf(p * 1e5)} Pa = <b>${nf(p)} bar</b>`; trap = { v: P / Q, msg: 'Convertis le débit en m³/s (÷ 60 000), puis la pression de Pa en bar (÷ 10⁵).' }; }
+        }
+        return { html: '<p>' + html + '</p>', unit, ans, tol: .02, sol, traps: [trap] };
+      }
+    },
+    {
+      id: 'e8', label: 'Puissance mécanique en translation', kind: 'num', make() {
+        const F = pick([200, 350, 700, 1200]), kmh = pick([1.8, 3.6, 7.2, 10.8]), v = kmh / 3.6, P = F * v;
+        return { html: `<p>La force de poussée d’une hélice vaut ${nf(F)} N alors que le bateau avance à ${nf(kmh)} km/h. Calcule la puissance transmise.</p>`, unit: 'W', ans: P, tol: .02,
+          sol: `v = ${nf(kmh)} / 3,6 = ${nf(v)} m/s ; P = F × v = ${nf(F)} × ${nf(v)} = <b>${nf(P)} W</b>`, traps: [{ v: F * kmh, msg: 'La vitesse doit être en m/s : divise les km/h par 3,6.' }] };
+      }
+    },
+    {
+      id: 'e9', label: 'Puissance mécanique en rotation', kind: 'num', make() {
+        const C = pick([.05, .2, 1.5, 12]), N = pick([300, 1000, 1500, 3000]), w = 2 * Math.PI * N / 60, P = C * w;
+        return { html: `<p>Un arbre transmet un couple de ${nf(C)} N·m en tournant à ${nf(N)} tr/min. Calcule la puissance transmise.</p>`, unit: 'W', ans: P, tol: .02,
+          sol: `Ω = 2π × ${nf(N)} / 60 = ${nf(w)} rad/s ; P = C × Ω = ${nf(C)} × ${nf(w)} = <b>${nf(P)} W</b>`, traps: [{ v: C * N, msg: 'La vitesse doit être exprimée en rad/s : Ω = 2π N / 60.' }] };
+      }
+    },
+    {
+      id: 'e10', label: 'Puissance hydraulique', kind: 'num', make() {
+        const p = pick([2, 4, 5, 6, 8]), Q = pick([6, 12, 18, 24, 30]), P = p * 1e5 * Q / 60000;
+        return { html: `<p>Une pompe fournit un fluide sous ${p} bar avec un débit de ${Q} L/min. Calcule la puissance hydraulique. (1 bar = 10<sup>5</sup> Pa ; 1 L = 10<sup>−3</sup> m³)</p>`, unit: 'W', ans: P, tol: .02,
+          sol: `p = ${p}×10<sup>5</sup> Pa ; Q = ${Q} / 60 000 = ${nf(Q / 60000)} m³/s ; P = p × Q = <b>${nf(P)} W</b>`, traps: [{ v: p * Q, msg: 'Convertis la pression en pascals et le débit en m³/s avant de multiplier.' }] };
+      }
+    },
+    {
+      id: 'eq_ef', label: 'Effort et flux par domaine', kind: 'class', make() {
+        const ds = shuffle(DOM).slice(0, 3), items = [];
+        ds.forEach((x, k) => { items.push({ t: x.e, c: k }); items.push({ t: x.f, c: k }); });
+        return { html: '<p>Associe à chaque domaine physique sa <strong>grandeur d’effort</strong> et sa <strong>grandeur de flux</strong> (deux grandeurs par domaine).</p>', cats: ds.map(x => x.d), items: shuffle(items), sol: ds.map(x => `<b>${x.d}</b> : ${x.e} et ${x.f}`).join('<br>') };
+      }
+    },
+    Q('eq6', 'Effort et flux en électricité', 'En courant continu, quelles sont les grandeurs d’effort et de flux dont le produit donne la puissance ?', 'Tension U (effort) et intensité I (flux)', ['Intensité I (effort) et tension U (flux)', 'Force F (effort) et vitesse V (flux)', 'Pression p (effort) et résistance R (flux)'], 'P = U × I : la tension est la grandeur d’effort, l’intensité la grandeur de flux.'),
+    Q('eq7', 'Effort et flux en hydraulique', 'En hydraulique, la puissance est le produit…', 'de la pression p par le débit volumique Q', ['de la force F par la vitesse V', 'du couple C par la vitesse angulaire Ω', 'de la tension U par l’intensité I'], 'P = p × Q avec p en pascals et Q en m³/s.'),
+    Q('efq1', 'Sens de l’effort', 'Que représente une <strong>grandeur d’effort</strong> ?', 'Ce qui tend à déplacer une quantité de matière (force, couple, pression, tension…)', ['Le débit de matière déplacée', 'L’énergie dissipée par les pertes', 'Le rapport entre puissance utile et puissance absorbée'], 'Une grandeur d’effort tend à déplacer de la matière ; la grandeur de flux traduit le déplacement obtenu (vitesse, intensité, débit…).'),
+    Q('efq2', 'Effort et flux en rotation', 'En mécanique de rotation, quelles grandeurs donnent la puissance par leur produit ?', 'Le couple C (N·m) et la vitesse angulaire Ω (rad/s)', ['La force F (N) et la vitesse angulaire Ω (rad/s)', 'Le couple C (N·m) et la vitesse linéaire V (m/s)', 'La pression p (Pa) et le couple C (N·m)'], 'P = C × Ω : le couple est la grandeur d’effort, la vitesse angulaire la grandeur de flux.'),
+    Q('efq3', 'Effort et flux en translation', 'En mécanique de translation, la grandeur de flux est…', 'la vitesse V, en m/s', ['la force F, en N', 'la pression p, en Pa', 'le couple C, en N·m'], 'P = F × V : la force est l’effort, la vitesse le flux.'),
+    Q('efq4', 'Effort et flux thermiques', 'En thermique, le produit d’une grandeur d’effort et d’une grandeur de flux est…', 'la température T (K) par le flux thermique (W/K)', ['la tension U (V) par l’intensité I (A)', 'la force F (N) par le flux thermique (W/K)', 'la pression p (Pa) par la température T (K)'], 'Le cours donne pour la thermique : effort = température T (K), flux = flux thermique (W/K).'),
+    Q('efq5', 'Produit effort × flux', 'Le produit d’une grandeur d’effort par la grandeur de flux associée est…', 'une puissance, en watts', ['une énergie, en joules', 'un rendement, sans unité', 'une quantité d’électricité, en coulombs'], 'Dans tous les domaines : P = effort × flux.'),
+    Q('efq6', 'Unités à employer', 'Pour calculer une puissance hydraulique en watts avec P = p × Q, il faut exprimer p et Q…', 'en pascals et en m³/s', ['en bar et en litres par minute', 'en pascals et en litres par minute', 'en bar et en m³/s'], 'Unités SI obligatoires : 1 bar = 10<sup>5</sup> Pa et 1 L/min = 1/60 000 m³/s.')
+  ];
+
+  /* ---------- 4. Moteur à courant continu ---------- */
+  function mccParams() {
+    let U, I, R, K;
+    do { U = pick([6, 12, 24]); I = pick([1, 1.5, 2, 3, 4]); R = pick([.5, 1, 2, 3]); K = pick([.05, .089, .1]); } while (R * I > .5 * U);
+    return { U, I, R, K, E: U - R * I };
+  }
+  const mcc = [
+    {
+      id: 'm1', label: 'Puissance absorbée', kind: 'num', make() {
+        const p = mccParams(), Pa = p.U * p.I;
+        return { html: `<p>Un moteur à courant continu est alimenté sous ${p.U} V et absorbe un courant de ${nf(p.I)} A. Calcule la puissance absorbée.</p>`, unit: 'W', ans: Pa, tol: .01,
+          sol: `P<sub>a</sub> = U × I = ${p.U} × ${nf(p.I)} = <b>${nf(Pa)} W</b>`, traps: [{ v: p.R * p.I * p.I, msg: 'C’est la puissance perdue par effet Joule, pas la puissance absorbée.' }] };
+      }
+    },
+    {
+      id: 'm2', label: 'Force contre-électromotrice', kind: 'num', make() {
+        const p = mccParams();
+        return { html: `<p>Un moteur de résistance d’induit R = ${nf(p.R)} Ω est alimenté sous ${p.U} V. Il absorbe ${nf(p.I)} A. Calcule sa force contre-électromotrice E (on néglige l’inductance en régime permanent).</p>`, unit: 'V', ans: p.E, tol: .02,
+          sol: `U = E + R·I, donc E = U − R × I = ${p.U} − ${nf(p.R)} × ${nf(p.I)} = <b>${nf(p.E)} V</b>`, traps: [{ v: p.U + p.R * p.I, msg: 'Tu as additionné. D’après la loi des mailles U = E + R·I, donc E = U − R·I.' }, { v: p.R * p.I, msg: 'Ce résultat est la chute de tension dans la résistance R. Il reste à la retrancher de U.' }] };
+      }
+    },
+    {
+      id: 'm3', label: 'Vitesse de rotation du moteur', kind: 'num', make() {
+        const p = mccParams(), w = p.E / p.K;
+        return { html: `<p>Un moteur de constantes ${S('K', 'e')} = ${S('K', 'c')} = ${nf(p.K)} (unités SI) est alimenté sous ${p.U} V. Sa résistance est R = ${nf(p.R)} Ω et il absorbe ${nf(p.I)} A. Calcule sa vitesse de rotation Ω en rad/s.</p>`, unit: 'rad/s', ans: w, tol: .02,
+          sol: `E = U − R·I = ${p.U} − ${nf(p.R)} × ${nf(p.I)} = ${nf(p.E)} V ; Ω = E / ${S('K', 'e')} = ${nf(p.E)} / ${nf(p.K)} = <b>${nf(w)} rad/s</b>`, traps: [{ v: p.U / p.K, msg: 'Tu as utilisé U au lieu de E. La vitesse est proportionnelle à la force contre-électromotrice : E = Ke·Ω.' }] };
+      }
+    },
+    {
+      id: 'm4', label: 'Conversion rad/s → tr/min', kind: 'num', make() {
+        const w = pick([50, 100, 150, 200, 314]), N = w * 60 / (2 * Math.PI);
+        return { html: `<p>Un moteur tourne à Ω = ${w} rad/s. Exprime sa fréquence de rotation en tr/min.</p>`, unit: 'tr/min', ans: N, tol: .02,
+          sol: `N = Ω × 60 / (2π) = ${w} × 60 / 6,283 = <b>${nf(N)} tr/min</b>`, traps: [{ v: w * 2 * Math.PI / 60, msg: 'Tu as appliqué la formule dans l’autre sens (tr/min → rad/s).' }] };
+      }
+    },
+    {
+      id: 'm5', label: 'Couple électromagnétique', kind: 'num', make() {
+        const p = mccParams(), C = p.K * p.I;
+        return { html: `<p>Un moteur de constante de couple ${S('K', 'c')} = ${nf(p.K)} N·m/A est traversé par un courant de ${nf(p.I)} A. Calcule le couple électromagnétique.</p>`, unit: 'N·m', ans: C, tol: .02,
+          sol: `${S('C', 'em')} = ${S('K', 'c')} × I = ${nf(p.K)} × ${nf(p.I)} = <b>${nf(C)} N·m</b>`, traps: [{ v: p.I / p.K, msg: 'Tu as divisé. Le couple est proportionnel au courant : Cem = Kc × I.' }] };
+      }
+    },
+    {
+      id: 'm6', label: 'Pertes Joule', kind: 'num', make() {
+        const p = mccParams(), Pj = p.R * p.I * p.I;
+        return { html: `<p>Un moteur de résistance d’induit R = ${nf(p.R)} Ω absorbe ${nf(p.I)} A. Calcule les pertes par effet Joule.</p>`, unit: 'W', ans: Pj, tol: .02,
+          sol: `${S('P', 'J')} = R × I² = ${nf(p.R)} × ${nf(p.I)}² = <b>${nf(Pj)} W</b>`, traps: [{ v: p.R * p.I, msg: 'Tu as oublié le carré : PJ = R × I².' }] };
+      }
+    },
+    {
+      id: 'm7', label: 'Rendement du moteur', kind: 'num', make() {
+        const p = mccParams(), Pa = p.U * p.I, Pj = p.R * p.I * p.I, eta = (Pa - Pj) / Pa * 100;
+        return { html: `<p>Un moteur est alimenté sous ${p.U} V, absorbe ${nf(p.I)} A et sa résistance d’induit est R = ${nf(p.R)} Ω. Les pertes fer et par frottement sont négligeables. Calcule son rendement, en pourcentage.</p>`, unit: '%', ans: eta, tol: .02,
+          sol: `P<sub>a</sub> = ${p.U} × ${nf(p.I)} = ${nf(Pa)} W ; P<sub>J</sub> = ${nf(p.R)} × ${nf(p.I)}² = ${nf(Pj)} W ; P<sub>u</sub> = P<sub>a</sub> − P<sub>J</sub> = ${nf(Pa - Pj)} W ; η = P<sub>u</sub> / P<sub>a</sub> = <b>${nf(eta)} %</b>`, traps: [{ v: Pj / Pa * 100, msg: 'Tu as calculé la part des pertes. Le rendement est P utile / P absorbée.' }] };
+      }
+    },
+    {
+      id: 'm8', label: 'Tension moyenne en MLI', kind: 'num', make() {
+        const a = pick([.25, .4, .5, .6, .75, .8]), Um = pick([6, 7.4, 12, 24]), U = a * Um;
+        return { html: `<p>Un moteur est commandé en MLI. La tension en créneaux oscille entre 0 V et ${nf(Um)} V avec un rapport cyclique α = ${nf(a * 100)} %. Calcule la tension moyenne aux bornes du moteur.</p>`, unit: 'V', ans: U, tol: .02,
+          sol: `${S('U', 'moy')} = α × ${S('U', 'max')} = ${nf(a)} × ${nf(Um)} = <b>${nf(U)} V</b>`, traps: [{ v: a * 100 * Um, msg: 'Le rapport cyclique doit être exprimé sans unité (50 % = 0,5).' }] };
+      }
+    },
+    {
+      id: 'm9', label: 'Rapport cyclique à choisir', kind: 'num', make() {
+        const Um = pick([6, 12, 24]), a = pick([.25, .4, .5, .6, .75]), U = a * Um;
+        return { html: `<p>Le moteur doit être alimenté sous une tension moyenne de ${nf(U)} V à partir d’un hacheur dont la tension maximale est ${nf(Um)} V. Quel rapport cyclique faut-il imposer, en pourcentage ?</p>`, unit: '%', ans: a * 100, tol: .02,
+          sol: `α = ${S('U', 'moy')} / ${S('U', 'max')} = ${nf(U)} / ${nf(Um)} = ${nf(a)} soit <b>${nf(a * 100)} %</b>`, traps: [{ v: Um / U, msg: 'Tu as inversé le rapport : α = Umoy / Umax, et il est inférieur à 1.' }] };
+      }
+    },
+    {
+      id: 'm10', label: 'Angle d’un servomoteur', kind: 'num', make() {
+        const t = pick([1, 1.25, 1.5, 1.75, 2]), a = (t - 1.5) * 90;
+        return { html: `<p>Un servomoteur reçoit une impulsion de ${nf(t)} ms. On sait que 1 ms correspond à −45°, 1,5 ms à 0° et 2 ms à +45°. Quel angle prend-il ? (valeur algébrique, en degrés)</p>`, unit: '°', ans: a, tol: .02, abs: .5,
+          sol: `La relation est linéaire : 0,5 ms ↔ 45°, donc angle = (${nf(t)} − 1,5) × 90 = <b>${nf(a)}°</b>`, traps: [] };
+      }
+    },
+    {
+      id: 'm11', label: 'Moteur pas à pas', kind: 'num', make() {
+        const ang = pick([45, 90, 180, 270, 360]), n = ang / 1.8;
+        return { html: `<p>Un moteur pas à pas en mode « pas complet » a 200 pas par tour (1,8° par pas). Combien de pas faut-il commander pour tourner de ${ang}° ?</p>`, unit: 'pas', ans: n, tol: .01,
+          sol: `Nombre de pas = ${ang} / 1,8 = <b>${nf(n)} pas</b>`, traps: [{ v: ang * 1.8, msg: 'Tu as multiplié. Il faut diviser l’angle voulu par l’angle d’un pas.' }] };
+      }
+    },
+    {
+      id: 'm12', label: 'Rendement d’un motoréducteur', kind: 'num', make() {
+        let m, h, t, U, I, Pu, Pa, eta, tries = 0;
+        do { m = pick([.3, .5, .8, 1]); h = pick([.5, 1, 1.5]); t = pick([8, 11.5, 15, 20]); U = pick([6, 9, 12]); I = pick([.25, .4, .5, .8]); Pu = m * 9.81 * h / t; Pa = U * I; eta = Pu / Pa; tries++; } while ((eta > .7 || eta < .12) && tries < 200);
+        const W = m * 9.81 * h;
+        return { html: `<p>Un motoréducteur élève une charge de ${nf(m * 1000)} g sur une hauteur de ${nf(h)} m en ${nf(t)} s. Il est alimenté sous ${U} V et absorbe ${nf(I)} A. Calcule son rendement, en pourcentage (g = 9,81 m/s²).</p>`, unit: '%', ans: eta * 100, tol: .03,
+          sol: `Énergie utile W = m·g·h = ${nf(m)} × 9,81 × ${nf(h)} = ${nf(W)} J ; ${S('P', 'u')} = W / t = ${nf(Pu)} W ; ${S('P', 'a')} = U × I = ${nf(Pa)} W ; η = ${S('P', 'u')} / ${S('P', 'a')} = <b>${nf(eta * 100)} %</b>`, traps: [{ v: Pu / Pa * 100 * 1000, msg: 'La masse doit être exprimée en kg (500 g = 0,5 kg).' }] };
+      }
+    },
+    Q('mq1', 'Rôle du stator', 'Dans un moteur à courant continu à aimants permanents, la partie fixe qui crée le champ magnétique est…', 'le stator (inducteur)', ['le rotor (induit)', 'le collecteur', 'les balais'], 'Le stator crée un champ fixe ; le rotor (induit) porte les bobinages parcourus par le courant.'),
+    Q('mq2', 'Collecteur et balais', 'À quoi servent le collecteur et les balais ?', 'À alimenter les bobinages du rotor et à inverser le sens du courant pour que le couple garde le même sens', ['À créer le champ magnétique fixe', 'À réduire la vitesse de rotation', 'À mesurer le couple fourni'], 'Les balais frottent sur le collecteur et distribuent le courant aux bobines de l’induit lors de sa rotation.'),
+    Q('mq3', 'Vitesse et tension', 'La vitesse de rotation d’un moteur à courant continu est…', 'proportionnelle à la tension d’alimentation', ['proportionnelle au courant absorbé', 'indépendante de la tension', 'inversement proportionnelle à la tension'], 'E = Ke·Ω et U ≈ E : à vide, Ω est proportionnelle à U. C’est ce qui permet le réglage de la vitesse par la tension.'),
+    Q('mq4', 'Couple et courant', 'Quand le couple résistant augmente, le courant absorbé par le moteur…', 'augmente', ['diminue', 'reste constant', 'devient nul'], 'Cem = Kc × Im : pour équilibrer un couple résistant plus grand, le moteur doit développer plus de couple, donc absorber plus de courant.'),
+    Q('mq5', 'Inversion du sens de rotation', 'Comment inverse-t-on le sens de rotation d’un moteur à courant continu ?', 'En intervertissant les deux fils d’alimentation', ['En doublant la tension d’alimentation', 'En changeant les balais', 'En augmentant le rapport cyclique'], 'Inverser la tension aux bornes inverse le courant, donc le couple. Le pont en H réalise cette inversion avec quatre interrupteurs.'),
+    Q('mq6', 'Courant au démarrage', 'Au démarrage, le courant absorbé par le moteur est…', 'maximal, car la force contre-électromotrice est nulle', ['nul, car le moteur est à l’arrêt', 'minimal, car la vitesse est faible', 'égal au courant nominal quelle que soit la charge'], 'À l’arrêt E = 0, donc I = U / R : le courant et le couple sont maximaux.'),
+    Q('mq7', 'Réversibilité', 'Un moteur à courant continu est réversible. Cela signifie qu’il peut aussi fonctionner…', 'en génératrice, ce qui permet de freiner', ['en transformateur de tension', 'en capteur de température', 'uniquement dans un sens de rotation'], 'Entraîné en rotation, il convertit l’énergie mécanique en énergie électrique.'),
+    Q('mq8', 'Rapport cyclique', 'Le rapport cyclique α d’un signal en créneaux est…', 'le rapport entre la durée à l’état haut et la période', ['la fréquence du signal', 'la tension maximale du signal', 'la durée de l’état bas'], 'α = T<sub>H</sub> / T, sans unité (ou en %). Il règle la tension moyenne : U<sub>moy</sub> = α × U<sub>max</sub>.'),
+    Q('mq9', 'Moteur asynchrone', 'Comment inverse-t-on le sens de rotation d’un moteur asynchrone triphasé ?', 'En permutant deux des trois fils de phase', ['En permutant les trois fils de phase', 'En augmentant la fréquence', 'En coupant l’un des fils de phase'], 'Permuter deux phases inverse le sens de rotation du champ tournant, donc celui du rotor.'),
+    Q('mq10', 'Moteur brushless', 'Quelle est la particularité d’un moteur brushless ?', 'Il n’a pas de balais : la commutation des courants est assurée par un système électronique', ['Il fonctionne uniquement en courant alternatif monophasé', 'Il possède un stator à aimants permanents et un collecteur', 'Il ne peut pas atteindre de vitesses élevées'], 'L’absence de balais réduit l’usure et permet des vitesses élevées, au prix d’un coût supérieur.')
+  ];
+
+  /* ---------- 5. Transmission mécanique ---------- */
+  const PAIRS = [[15, 45], [20, 60], [18, 54], [12, 48], [20, 40], [30, 60]];
+  const tra = [
+    {
+      id: 't1', label: 'Conversion tr/min → rad/s', kind: 'num', make() {
+        const N = pick([300, 600, 1500, 3000]), w = 2 * Math.PI * N / 60;
+        return { html: `<p>Un arbre tourne à ${nf(N)} tr/min. Exprime sa vitesse angulaire en rad/s.</p>`, unit: 'rad/s', ans: w, tol: .02,
+          sol: `Ω = 2π × N / 60 = 2π × ${nf(N)} / 60 = <b>${nf(w)} rad/s</b>`, traps: [{ v: N * 60 / (2 * Math.PI), msg: 'Tu as appliqué la formule dans l’autre sens (rad/s → tr/min).' }] };
+      }
+    },
+    {
+      id: 't2', label: 'Rapport de réduction d’un engrenage', kind: 'num', make() {
+        const z = pick(PAIRS), r = z[0] / z[1];
+        return { html: `<p>Un pignon moteur de ${z[0]} dents entraîne une roue de ${z[1]} dents. Calcule le rapport de réduction r = ${S('ω', 's')} / ${S('ω', 'e')} (vitesse de sortie sur vitesse d’entrée).</p>`, unit: '', ans: r, tol: .02,
+          sol: `r = ${S('Z', 'menant')} / ${S('Z', 'mené')} = ${z[0]} / ${z[1]} = <b>${nf(r)}</b> (soit 1/${nf(z[1] / z[0])}) : la roue tourne ${nf(z[1] / z[0])} fois moins vite que le pignon`, traps: [{ v: z[1] / z[0], msg: 'Tu as calculé le rapport de transmission (inverse du rapport de réduction). Ici r = ωs / ωe = Z menant / Z mené.' }] };
+      }
+    },
+    {
+      id: 't3', label: 'Vitesse de sortie', kind: 'num', make() {
+        const k = pick([5, 10, 20, 50]), Ne = pick([1500, 3000, 4000]), Ns = Ne / k;
+        return { html: `<p>Un moteur tourne à ${nf(Ne)} tr/min et entraîne un réducteur de rapport de réduction r = 1/${k}. Quelle est la fréquence de rotation en sortie du réducteur ?</p>`, unit: 'tr/min', ans: Ns, tol: .02,
+          sol: `${S('N', 's')} = r × ${S('N', 'e')} = ${nf(Ne)} / ${k} = <b>${nf(Ns)} tr/min</b>`, traps: [{ v: Ne * k, msg: 'Un réducteur ralentit : la vitesse de sortie est plus petite que celle d’entrée.' }] };
+      }
+    },
+    {
+      id: 't4', label: 'Réducteur à deux étages', kind: 'num', make() {
+        const a = pick(PAIRS), b = pick(PAIRS), Nm = pick([1500, 3000, 4500]), r = a[0] / a[1] * b[0] / b[1], Ns = Nm * r;
+        return { html: `<p>Un réducteur à deux étages est formé de deux couples de roues : 1<sup>er</sup> étage ${a[0]} dents → ${a[1]} dents, 2<sup>e</sup> étage ${b[0]} dents → ${b[1]} dents. Le moteur tourne à ${nf(Nm)} tr/min. Calcule la fréquence de rotation en sortie.</p>`, unit: 'tr/min', ans: Ns, tol: .02,
+          sol: `${S('r', 'total')} = ${S('r', 1)} × ${S('r', 2)} = (${a[0]}/${a[1]}) × (${b[0]}/${b[1]}) = ${nf(r)} ; ${S('N', 's')} = ${nf(r)} × ${nf(Nm)} = <b>${nf(Ns)} tr/min</b>`, traps: [{ v: Nm * (a[0] / a[1] + b[0] / b[1]), msg: 'Les rapports de réduction se multiplient, ils ne s’additionnent pas.' }] };
+      }
+    },
+    {
+      id: 't5', label: 'Couple en sortie de réducteur', kind: 'num', make() {
+        const Ce = pick([.02, .05, .1, .25]), k = pick([5, 10, 20, 50]), eta = pick([.6, .7, .8, .9]), Cs = eta * Ce * k;
+        return { html: `<p>Un réducteur de rapport de réduction r = 1/${k} et de rendement ${nf(eta)} reçoit un couple d’entrée de ${nf(Ce)} N·m. Calcule le couple disponible en sortie.</p>`, unit: 'N·m', ans: Cs, tol: .02,
+          sol: `P<sub>s</sub> = η × P<sub>e</sub> donne ${S('C', 's')}·${S('ω', 's')} = η·${S('C', 'e')}·${S('ω', 'e')}, donc ${S('C', 's')} = η × ${S('C', 'e')} / r = ${nf(eta)} × ${nf(Ce)} × ${k} = <b>${nf(Cs)} N·m</b>`, traps: [{ v: Ce * k, msg: 'Tu as oublié le rendement : une partie de la puissance est perdue, le couple de sortie est un peu plus faible.' }, { v: eta * Ce / k, msg: 'Un réducteur multiplie le couple (il divise la vitesse). Utilise Cs = η × Ce / r.' }] };
+      }
+    },
+    {
+      id: 't6', label: 'Diamètre d’une roue dentée', kind: 'num', make() {
+        const m = pick([1, 1.5, 2, 2.5, 3]), z = pick([18, 24, 30, 45, 60]), d = m * z;
+        return { html: `<p>Une roue dentée de module m = ${nf(m)} mm possède Z = ${z} dents. Calcule son diamètre primitif.</p>`, unit: 'mm', ans: d, tol: .01,
+          sol: `D = m × Z = ${nf(m)} × ${z} = <b>${nf(d)} mm</b>`, traps: [{ v: z / m, msg: 'Le diamètre est le produit du module par le nombre de dents.' }] };
+      }
+    },
+    {
+      id: 't7', label: 'Vitesse linéaire d’un excentrique', kind: 'num', make() {
+        const w = pick([5, 10, 20, 40]), R = pick([6, 10, 15, 25]), V = w * R / 1000;
+        return { html: `<p>Un excentrique de rayon ${R} mm tourne à ${w} rad/s. Calcule la vitesse du point d’excentration en m/s (V = Ω × R).</p>`, unit: 'm/s', ans: V, tol: .02,
+          sol: `V = Ω × R = ${w} × ${nf(R / 1000)} = <b>${nf(V)} m/s</b> (rayon converti en mètres)`, traps: [{ v: w * R, msg: 'Convertis le rayon en mètres (1 mm = 0,001 m).' }] };
+      }
+    },
+    {
+      id: 't8', label: 'Rapport de réduction à réaliser', kind: 'num', make() {
+        const Nm = pick([3000, 4500, 6000]), k = pick([10, 20, 30, 50]), Ns = Nm / k;
+        return { html: `<p>Un moteur tourne à ${nf(Nm)} tr/min. La charge doit tourner à ${nf(Ns)} tr/min. Quel rapport de réduction r = ${S('N', 's')} / ${S('N', 'e')} faut-il réaliser ?</p>`, unit: '', ans: 1 / k, tol: .02,
+          sol: `r = ${S('N', 's')} / ${S('N', 'e')} = ${nf(Ns)} / ${nf(Nm)} = <b>${nf(1 / k)}</b> (soit 1/${k})`, traps: [{ v: k, msg: 'Tu as calculé l’inverse (rapport de transmission). Le rapport de réduction est ωs / ωe, inférieur à 1 pour un réducteur.' }] };
+      }
+    },
+    Q('tq1', 'Système réversible', 'Un mécanisme est dit <strong>réversible</strong> lorsque…', 'le mouvement de sortie peut entraîner le mouvement d’entrée', ['il peut tourner dans les deux sens uniquement', 'son rendement est égal à 1', 'il transforme une rotation en translation'], 'Un réducteur à engrenages est en général réversible, un vis-écrou à filet standard ne l’est pas.'),
+    Q('tq2', 'Mécanisme irréversible', 'Lequel de ces mécanismes est en général <strong>irréversible</strong> ?', 'Le système vis-écrou à filet standard', ['Le réducteur à engrenages', 'Le système pignon-crémaillère', 'La transmission poulie-courroie'], 'Avec une vis-écrou standard, l’écrou ne peut pas entraîner la vis en rotation : le frottement bloque le mouvement.'),
+    Q('tq3', 'Effet d’un réducteur', 'Un réducteur de vitesse permet de…', 'diminuer la vitesse et augmenter le couple', ['augmenter la vitesse et le couple', 'diminuer la vitesse et le couple', 'augmenter la vitesse et diminuer le couple'], 'La puissance se conserve (aux pertes près) : si la vitesse diminue, le couple augmente.'),
+    Q('tq4', 'Rapport de transmission', 'Quelle relation lie le rapport de transmission et le rapport de réduction r ?', 'Rapport de transmission = 1 / r', ['Rapport de transmission = r', 'Rapport de transmission = r²', 'Rapport de transmission = 1 − r'], 'Les logiciels comme Scilab ou Matlab utilisent le rapport de transmission ; à la main, on privilégie le rapport de réduction.'),
+    Q('tq5', 'Étages en cascade', 'Un réducteur comporte plusieurs étages en cascade. Son rapport de réduction total est…', 'le produit des rapports de réduction de chaque étage', ['la somme des rapports de réduction', 'le rapport du dernier étage', 'la moyenne des rapports de réduction'], 'Chaque étage multiplie la vitesse par son rapport : r<sub>total</sub> = r<sub>1</sub> × r<sub>2</sub> × …'),
+    Q('tq6', 'Transformation de mouvement', 'Quel mécanisme transforme une rotation en translation ?', 'Le système pignon-crémaillère', ['Le réducteur à engrenages', 'La transmission poulie-courroie', 'L’accouplement'], 'Le pignon (rotation) entraîne une crémaillère (translation). Le vis-écrou transforme aussi la rotation en translation.')
+  ];
+
+  /* ---------- 6. Accumulateurs et autonomie ---------- */
+  const acc = [
+    {
+      id: 'a1', label: 'Énergie stockée', kind: 'num', make() {
+        const C = pick([2.5, 10, 18, 35, 60, 135]), U = pick([1.2, 3.7, 7.4, 12, 24]), E = C * U;
+        return { html: `<p>Une batterie de ${nf(U)} V a une capacité de ${nf(C)} Ah. Calcule l’énergie qu’elle stocke, en wattheures.</p>`, unit: 'Wh', ans: E, tol: .01,
+          sol: `E = C × U = ${nf(C)} × ${nf(U)} = <b>${nf(E)} Wh</b>`, traps: [{ v: E * 3600, msg: 'Ce résultat est en joules. La question demande des Wh : C (Ah) × U (V) donne directement des Wh.' }] };
+      }
+    },
+    {
+      id: 'a2', label: 'Autonomie', kind: 'num', make() {
+        const C = pick([2.5, 12, 18, 20]), I = pick([.5, 1, 2, 3, 4]), t = C / I;
+        return { html: `<p>Une batterie de capacité ${nf(C)} Ah alimente un récepteur qui absorbe un courant constant de ${nf(I)} A. Quelle est son autonomie, en heures ?</p>`, unit: 'h', ans: t, tol: .01,
+          sol: `t = C / I = ${nf(C)} / ${nf(I)} = <b>${nf(t)} h</b>`, traps: [{ v: C * I, msg: 'Tu as multiplié. L’autonomie est inversement proportionnelle au courant débité : t = C / I.' }] };
+      }
+    },
+    {
+      id: 'a3', label: 'Conversion Ah → coulombs', kind: 'num', make() {
+        const C = pick([1.5, 2.5, 10, 18]);
+        return { html: `<p>Une batterie a une capacité de ${nf(C)} Ah. Exprime cette quantité d’électricité en coulombs.</p>`, unit: 'C', ans: C * 3600, tol: .01,
+          sol: `1 Ah = 3600 C, donc ${nf(C)} Ah = ${nf(C)} × 3600 = <b>${nf(C * 3600)} C</b>`, traps: [{ v: C / 3600, msg: 'Pour passer des Ah aux C, on multiplie par 3600.' }] };
+      }
+    },
+    {
+      id: 'a4', label: 'Énergie massique', kind: 'num', make() {
+        const D = [[12, 135, 48], [1.2, 1.5, .025], [3.7, 3, .047], [7.4, 3.5, .2], [24, 20, 12]], d = pick(D), e = d[0] * d[1] / d[2];
+        return { html: `<p>Un accumulateur de ${nf(d[0])} V et ${nf(d[1])} Ah a une masse de ${nf(d[2])} kg. Calcule son énergie massique en Wh/kg.</p>`, unit: 'Wh/kg', ans: e, tol: .02,
+          sol: `e = U × C / m = ${nf(d[0])} × ${nf(d[1])} / ${nf(d[2])} = <b>${nf(e)} Wh/kg</b>`, traps: [{ v: d[0] * d[1] * d[2], msg: 'Il faut diviser l’énergie par la masse, pas la multiplier.' }] };
+      }
+    },
+    {
+      id: 'a5', label: 'Association série ou parallèle', kind: 'num', make() {
+        const n = pick([2, 3, 4]), U = pick([3.7, 7.4, 12]), C = pick([5, 10, 20]), serie = Math.random() < .5;
+        if (serie) return { html: `<p>On associe <strong>en série</strong> ${n} batteries identiques de ${nf(U)} V et ${nf(C)} Ah. Quelle est la tension de l’ensemble ?</p>`, unit: 'V', ans: n * U, tol: .01,
+          sol: `En série, les tensions s’additionnent : ${n} × ${nf(U)} = <b>${nf(n * U)} V</b> (la capacité reste ${nf(C)} Ah)`, traps: [{ v: U, msg: 'En série, les tensions s’additionnent.' }] };
+        return { html: `<p>On associe <strong>en parallèle</strong> ${n} batteries identiques de ${nf(U)} V et ${nf(C)} Ah. Quelle est la capacité de l’ensemble ?</p>`, unit: 'Ah', ans: n * C, tol: .01,
+          sol: `En parallèle, les capacités s’additionnent : ${n} × ${nf(C)} = <b>${nf(n * C)} Ah</b> (la tension reste ${nf(U)} V)`, traps: [{ v: C, msg: 'En parallèle, les capacités s’additionnent.' }] };
+      }
+    },
+    {
+      id: 'a6', label: 'Autonomie avec décharge limitée', kind: 'num', make() {
+        const C = pick([12, 18, 20]), I = pick([.8, 1, 1.5, 2]), d = pick([.7, .8, .9]), t = d * C / I;
+        return { html: `<p>Une batterie de ${nf(C)} Ah n’est déchargée qu’à ${nf(d * 100)} % de sa capacité. Elle alimente un système qui absorbe en moyenne ${nf(I)} A. Quelle est l’autonomie, en heures ?</p>`, unit: 'h', ans: t, tol: .02,
+          sol: `${S('Q', 'dispo')} = ${nf(d)} × ${nf(C)} = ${nf(d * C)} Ah ; t = ${S('Q', 'dispo')} / ${S('I', 'moy')} = ${nf(d * C)} / ${nf(I)} = <b>${nf(t)} h</b>`, traps: [{ v: C / I, msg: 'Tu as utilisé la capacité complète. Seule la fraction autorisée de décharge est disponible.' }] };
+      }
+    },
+    {
+      id: 'a7', label: 'Source de tension réelle', kind: 'num', make() {
+        const U0 = pick([6, 9, 12, 12.6]), R = pick([.1, .2, .5]), I = pick([2, 4, 5, 8]), U = U0 - R * I;
+        return { html: `<p>Une batterie de tension à vide ${S('U', 0)} = ${nf(U0)} V a une résistance interne R = ${nf(R)} Ω. Elle débite un courant de ${nf(I)} A. Quelle tension ${S('U', 's')} délivre-t-elle ?</p>`, unit: 'V', ans: U, tol: .01,
+          sol: `${S('U', 's')} = ${S('U', 0)} − R × ${S('I', 's')} = ${nf(U0)} − ${nf(R)} × ${nf(I)} = <b>${nf(U)} V</b>`, traps: [{ v: U0, msg: 'La tension à vide n’est obtenue que si la source ne débite aucun courant. Retranche la chute de tension dans la résistance interne.' }] };
+      }
+    },
+    {
+      id: 'a8', label: 'Courant admissible pour une autonomie donnée', kind: 'num', make() {
+        const C = pick([2.5, 5, 10, 18]), t = pick([5, 10, 20]), I = C / t * 1000;
+        return { html: `<p>Une batterie de ${nf(C)} Ah doit alimenter un montage pendant ${t} h. Quel courant moyen maximal peut-il absorber, en mA ?</p>`, unit: 'mA', ans: I, tol: .02,
+          sol: `I = C / t = ${nf(C)} / ${t} = ${nf(C / t)} A = <b>${nf(I)} mA</b>`, traps: [{ v: C / t, msg: 'La réponse est attendue en milliampères : multiplie les ampères par 1000.' }] };
+      }
+    },
+    {
+      id: 'a9', label: 'Nombre de cycles de fonctionnement', kind: 'num', make() {
+        const t = pick([2, 5, 9]), T = pick([8, 10, 20, 30, 60]), N = t * 3600 / T;
+        return { html: `<p>Un système a une autonomie de ${t} h. Un cycle de fonctionnement dure ${T} s. Combien de cycles peut-il réaliser ?</p>`, unit: 'cycles', ans: N, tol: .01,
+          sol: `${t} h = ${nf(t * 3600)} s ; nombre de cycles = ${nf(t * 3600)} / ${T} = <b>${nf(N)}</b>`, traps: [{ v: t / T, msg: 'Convertis l’autonomie en secondes pour la comparer à la durée d’un cycle.' }] };
+      }
+    },
+    Q('aq1', 'Capacité d’une batterie', 'La capacité d’un accumulateur, exprimée en Ah, représente…', 'la quantité d’électricité qu’il peut restituer lorsqu’il est chargé', ['la tension à ses bornes', 'sa puissance maximale', 'sa résistance interne'], 'C s’exprime en Ah ou mAh. L’énergie stockée se déduit de E (Wh) = C (Ah) × U (V).'),
+    Q('aq2', 'Association en série', 'Deux batteries identiques sont associées <strong>en série</strong>. Qu’obtient-on ?', 'Une tension doublée et une capacité inchangée', ['Une tension inchangée et une capacité doublée', 'Une tension et une capacité doublées', 'Une tension doublée et une capacité divisée par deux'], 'En série, les tensions s’additionnent. En parallèle, ce sont les capacités. Dans les deux cas l’énergie stockée est doublée.'),
+    Q('aq3', 'Association en parallèle', 'Deux batteries identiques sont associées <strong>en parallèle</strong>. Qu’obtient-on ?', 'Une tension inchangée et une capacité doublée', ['Une tension doublée et une capacité inchangée', 'Une tension inchangée et une capacité inchangée', 'Une tension divisée par deux'], 'En parallèle, la tension reste celle d’une batterie, mais la capacité (donc l’autonomie) double.'),
+    Q('aq4', 'Résistance interne', 'Quand une batterie débite un courant de plus en plus grand, sa tension de sortie…', 'diminue, à cause de sa résistance interne', ['augmente', 'reste égale à la tension à vide', 'devient nulle immédiatement'], 'U<sub>s</sub> = U<sub>0</sub> − R·I<sub>s</sub> : plus le courant est grand, plus la chute dans la résistance interne est importante.'),
+    Q('aq5', 'Autonomie et courant', 'Si le courant débité par une batterie double, l’autonomie…', 'est divisée par deux', ['est doublée', 'reste identique', 'est multipliée par quatre'], 't = C / I : l’autonomie est inversement proportionnelle au courant débité.'),
+    Q('aq6', 'Unités à connaître', 'Quelles relations entre unités sont exactes ?', '1 Wh = 3600 J et 1 Ah = 3600 C', ['1 Wh = 60 J et 1 Ah = 60 C', '1 Wh = 3600 C et 1 Ah = 3600 J', '1 Wh = 1000 J et 1 Ah = 1000 C'], 'Une heure vaut 3600 s : 1 Wh = 1 W × 3600 s et 1 Ah = 1 A × 3600 s.')
+  ];
+
+  /* ---------- 7. Lire un document technique ---------- */
+  const yAxis = Imax => Imax > 2 ? Math.ceil(Imax) : Math.max(1, Math.ceil(Imax * 2) / 2);
+  const dc = [
+    {
+      id: 'd1', label: 'Plaque signalétique : rendement nominal', kind: 'num', make() {
+        const U = pick([12, 24, 36, 48]), I = pick([1.5, 2.5, 3.2, 5, 8]), eta = pick([.6, .7, .75, .8, .85]), Pu = Math.round(eta * U * I), N = pick([1500, 3000, 3500]), v = Pu / (U * I) * 100;
+        return { html: `<p>Voici la plaque signalétique d’un moteur à courant continu. Calcule son rendement nominal, en pourcentage.</p><div class="tblwrap"><table class="plaque"><tr><th>Tension nominale</th><td>${U} V</td></tr><tr><th>Courant nominal</th><td>${nf(I)} A</td></tr><tr><th>Fréquence de rotation nominale</th><td>${nf(N)} tr/min</td></tr><tr><th>Puissance utile nominale</th><td>${Pu} W</td></tr></table></div>`, unit: '%', ans: v, tol: .02,
+          sol: `${S('P', 'a')} = U × I = ${U} × ${nf(I)} = ${nf(U * I)} W ; η = ${S('P', 'u')} / ${S('P', 'a')} = ${Pu} / ${nf(U * I)} = <b>${nf(v)} %</b>`, traps: [{ v: U * I / Pu * 100, msg: 'Tu as divisé dans le mauvais sens : le rendement est P utile / P absorbée, il est inférieur à 100 %.' }] };
+      }
+    },
+    {
+      id: 'd2', label: 'Plaque signalétique : couple utile', kind: 'num', make() {
+        const U = pick([12, 24, 36, 48]), I = pick([2.5, 3.2, 5, 8]), eta = pick([.7, .75, .8, .85]), Pu = Math.round(eta * U * I), N = pick([1500, 3000, 3500]), w = 2 * Math.PI * N / 60, C = Pu / w;
+        return { html: `<p>Voici la plaque signalétique d’un moteur. Calcule le couple utile nominal, en N·m.</p><div class="tblwrap"><table class="plaque"><tr><th>Tension nominale</th><td>${U} V</td></tr><tr><th>Courant nominal</th><td>${nf(I)} A</td></tr><tr><th>Fréquence de rotation nominale</th><td>${nf(N)} tr/min</td></tr><tr><th>Puissance utile nominale</th><td>${Pu} W</td></tr></table></div>`, unit: 'N·m', ans: C, tol: .03,
+          sol: `Ω = 2π × ${nf(N)} / 60 = ${nf(w)} rad/s ; ${S('C', 'u')} = ${S('P', 'u')} / Ω = ${Pu} / ${nf(w)} = <b>${nf(C)} N·m</b>`, traps: [{ v: Pu / N, msg: 'La vitesse doit être en rad/s : Ω = 2π N / 60.' }] };
+      }
+    },
+    {
+      id: 'd3', label: 'Caractéristique U = f(I) : résistance interne', kind: 'num', make() {
+        const U0 = pick([6, 7, 9, 12]), Ib = pick([2, 4, 5]), dU = U0 > 8 ? pick([1, 2, 3]) : pick([.5, 1, 1.5, 2]), R = dU / Ib, Ub = U0 - dU, xmax = Ib === 2 ? 4 : 6, ymax = Math.ceil(U0 / 2) * 2, sy = ymax > 8 ? 2 : 1;
+        const svg = plot({ xmax, ymax, sx: 1, sy, my: sy / 2, xl: 'Courant I (A)', yl: 'Tension U (V)', alt: 'Caractéristique tension-courant d’une batterie',
+          draw: (X, Y) => `<line x1="${X(0)}" y1="${Y(U0)}" x2="${X(xmax)}" y2="${Y(U0 - R * xmax)}" class="curve"/><line x1="${X(Ib)}" y1="${Y(0)}" x2="${X(Ib)}" y2="${Y(Ub)}" class="guide"/><line x1="${X(0)}" y1="${Y(Ub)}" x2="${X(Ib)}" y2="${Y(Ub)}" class="guide"/><circle cx="${X(0)}" cy="${Y(U0)}" r="4.5" class="pt"/><circle cx="${X(Ib)}" cy="${Y(Ub)}" r="4.5" class="pt"/><text x="${X(0) + 9}" y="${Y(U0) - 8}" class="pl">A</text><text x="${X(Ib) + 9}" y="${Y(Ub) - 8}" class="pl">B</text>` });
+        return { html: `<p>La caractéristique U = f(I) d’une batterie est tracée ci-dessous. Lis les coordonnées des points A et B, puis détermine la résistance interne de la batterie.</p><figure class="fig">${svg}</figure>`, unit: 'Ω', ans: R, tol: .05,
+          sol: `Point A (I = 0) : ${S('U', 0)} = ${nf(U0)} V. Point B : I = ${Ib} A et U = ${nf(Ub)} V. R = (${S('U', 0)} − ${S('U', 'B')}) / ${S('I', 'B')} = (${nf(U0)} − ${nf(Ub)}) / ${Ib} = <b>${nf(R)} Ω</b>`, traps: [{ v: -R, msg: 'La résistance est positive : c’est la valeur absolue de la pente de la droite.' }, { v: dU, msg: 'Tu as lu la chute de tension, il faut encore la diviser par le courant ΔI.' }] };
+      }
+    },
+    {
+      id: 'd4', label: 'Profil de courant : courant moyen', kind: 'num', make() {
+        const seg = []; let prev = -1; for (let k = 0; k < 3; k++) { let I; do { I = pick([.5, 1, 1.5, 2, 3]); } while (I === prev); prev = I; seg.push({ I, d: pick([1, 2, 3, 4]) }); }
+        const T = seg.reduce((s, x) => s + x.d, 0), A = seg.reduce((s, x) => s + x.I * x.d, 0), Im = A / T, Imax = Math.max(...seg.map(x => x.I)), ymax = yAxis(Imax);
+        const svg = plot({ xmax: T, ymax, sx: 1, sy: ymax > 2 ? 1 : .5, xl: 'Temps (s)', yl: 'Courant I (A)', alt: 'Profil du courant absorbé sur un cycle',
+          draw: (X, Y) => { let s = '', t = 0; seg.forEach(x => { s += `<rect x="${X(t)}" y="${Y(x.I)}" width="${X(t + x.d) - X(t)}" height="${Y(0) - Y(x.I)}" class="area"/>`; t += x.d; }); return s; } });
+        return { html: `<p>Le courant absorbé par un système sur un cycle de fonctionnement est représenté ci-dessous. Calcule le courant moyen sur le cycle.</p><figure class="fig">${svg}</figure>`, unit: 'A', ans: Im, tol: .02,
+          sol: `Aire sous la courbe : ${seg.map(x => `${nf(x.I)}×${x.d}`).join(' + ')} = ${nf(A)} A·s ; durée du cycle T = ${T} s ; ${S('I', 'moy')} = aire / T = ${nf(A)} / ${T} = <b>${nf(Im)} A</b>`, traps: [{ v: seg.reduce((s, x) => s + x.I, 0) / 3, msg: 'Tu as fait la moyenne des trois valeurs de courant sans tenir compte de leur durée. Il faut pondérer par le temps (aire sous la courbe).' }] };
+      }
+    },
+    {
+      id: 'd5', label: 'Profil de courant : autonomie', kind: 'num', make() {
+        const seg = []; let prev = -1; for (let k = 0; k < 3; k++) { let I; do { I = pick([.5, 1, 1.5, 2, 3]); } while (I === prev); prev = I; seg.push({ I, d: pick([1, 2, 3, 4]) }); }
+        const T = seg.reduce((s, x) => s + x.d, 0), A = seg.reduce((s, x) => s + x.I * x.d, 0), Im = A / T, Imax = Math.max(...seg.map(x => x.I)), ymax = yAxis(Imax), C = pick([6, 9, 10, 12]), U = pick([12, 24]), d = .8, t = d * C / Im;
+        const svg = plot({ xmax: T, ymax, sx: 1, sy: ymax > 2 ? 1 : .5, xl: 'Temps (s)', yl: 'Courant I (A)', alt: 'Profil du courant absorbé sur un cycle',
+          draw: (X, Y) => { let s = '', t0 = 0; seg.forEach(x => { s += `<rect x="${X(t0)}" y="${Y(x.I)}" width="${X(t0 + x.d) - X(t0)}" height="${Y(0) - Y(x.I)}" class="area"/>`; t0 += x.d; }); return s; } });
+        return { html: `<p>Un système, alimenté par une batterie de ${U} V et ${C} Ah, absorbe le courant représenté ci-dessous au cours d’un cycle répété en boucle. La batterie n’est déchargée qu’à 80 %. Calcule l’autonomie, en heures.</p><figure class="fig">${svg}</figure>`, unit: 'h', ans: t, tol: .03,
+          sol: `${S('I', 'moy')} = (${seg.map(x => `${nf(x.I)}×${x.d}`).join(' + ')}) / ${T} = ${nf(Im)} A ; ${S('Q', 'dispo')} = 0,8 × ${C} = ${nf(.8 * C)} Ah ; t = ${S('Q', 'dispo')} / ${S('I', 'moy')} = <b>${nf(t)} h</b>`, traps: [{ v: C / Im, msg: 'Tu as utilisé la capacité totale. Avec une décharge limitée à 80 %, la capacité disponible est 0,8 × C.' }, { v: .8 * C / (seg.reduce((s, x) => s + x.I, 0) / 3), msg: 'Le courant moyen doit tenir compte de la durée de chaque palier (aire sous la courbe).' }] };
+      }
+    },
+    {
+      id: 'd6', label: 'Courbe C = f(I) : constante de couple', kind: 'num', make() {
+        const Kc = pick([.04, .06, .08, .1]), Ip = pick([2, 4, 5]), xmax = 6, ymax = Math.ceil(Kc * xmax / .1 - 1e-9) * .1, Cp = Kc * Ip;
+        const svg = plot({ xmax, ymax: r2(ymax), sx: 1, sy: .1, my: .02, xl: 'Courant I (A)', yl: 'Couple C (N·m)', alt: 'Couple en fonction du courant pour un moteur',
+          draw: (X, Y) => `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(xmax)}" y2="${Y(Kc * xmax)}" class="curve"/><line x1="${X(Ip)}" y1="${Y(0)}" x2="${X(Ip)}" y2="${Y(Cp)}" class="guide"/><line x1="${X(0)}" y1="${Y(Cp)}" x2="${X(Ip)}" y2="${Y(Cp)}" class="guide"/><circle cx="${X(Ip)}" cy="${Y(Cp)}" r="4.5" class="pt"/>` });
+        return { html: `<p>On a relevé la courbe du couple électromagnétique d’un moteur en fonction du courant. Lis les coordonnées du point marqué, puis détermine la constante de couple ${S('K', 'c')} en N·m/A.</p><figure class="fig">${svg}</figure>`, unit: 'N·m/A', ans: Kc, tol: .05,
+          sol: `Le point marqué a pour coordonnées I = ${Ip} A et C = ${nf(Cp)} N·m. ${S('K', 'c')} = C / I = ${nf(Cp)} / ${Ip} = <b>${nf(Kc)} N·m/A</b> (pente de la droite)`, traps: [{ v: 1 / Kc, msg: 'Tu as calculé I / C. La constante de couple est C / I (couple divisé par courant).' }] };
+      }
+    }
+  ];
+
+  const NOTIONS = [
+    { id: 'kir', name: 'Lois de Kirchhoff', sub: 'Ohm, nœuds, mailles, associations de résistances, ponts diviseurs', gens: kir,
+      rappel: [
+        { t: 'Loi d’Ohm et puissance', f: ['U = R × I', 'P = U × I = R × I² = U² / R'] },
+        { t: 'Vocabulaire', p: ['<b>Nœud</b> : point où aboutissent au moins trois dipôles. <b>Branche</b> : dipôles en série entre deux nœuds consécutifs. <b>Maille</b> : contour fermé d’au moins deux branches, parcouru une seule fois.'] },
+        { t: 'Les deux lois', f: ['Nœuds : Σ I entrants = Σ I sortants   (Σ ± I = 0)', 'Mailles : Σ ± U = 0   (sens de parcours fixé ; + si la flèche suit le sens)'] },
+        { t: 'Associations et ponts diviseurs', f: ['Série : R<sub>eq</sub> = R<sub>1</sub> + R<sub>2</sub> + …', 'Parallèle : 1/R<sub>eq</sub> = 1/R<sub>1</sub> + 1/R<sub>2</sub> + …   (deux résistances : R<sub>1</sub>R<sub>2</sub> / (R<sub>1</sub>+R<sub>2</sub>))', 'Pont diviseur de tension : U<sub>1</sub> = U × R<sub>1</sub> / (R<sub>1</sub> + R<sub>2</sub>)', 'Pont diviseur de courant : I<sub>1</sub> = I × R<sub>2</sub> / (R<sub>1</sub> + R<sub>2</sub>)'] },
+        { t: 'Méthode de résolution', p: ['Un courant inconnu par branche. Avec n nœuds : n − 1 équations aux nœuds, puis autant d’équations de mailles que nécessaire. Un courant négatif signifie que son sens réel est l’inverse du sens choisi.'] }
+      ] },
+    { id: 'enp', name: 'Énergie et puissance', sub: 'Unités, énergie et puissance, rendement, rendement global', gens: enp,
+      rappel: [
+        { t: 'Énergie et puissance', f: ['E (J) = P (W) × t (s)      E (Wh) = P (W) × t (h)', '1 Wh = 3600 J      1 W = 1 J/s', 'P = E / t'], p: ['La puissance se calcule aussi en multipliant une grandeur d’effort par une grandeur de flux (voir la notion « Grandeurs d’effort et de flux »).'] },
+        { t: 'Rendement', f: ['η = P<sub>s</sub> / P<sub>e</sub> = E<sub>s</sub> / E<sub>e</sub>   (sans unité, entre 0 et 1)', 'Pertes = P<sub>e</sub> − P<sub>s</sub>', 'η<sub>global</sub> = η<sub>1</sub> × η<sub>2</sub> × η<sub>3</sub> × …'] }
+      ] },
+    { id: 'efl', name: 'Grandeurs d’effort et de flux', sub: 'Effort × flux dans chaque domaine physique, unités et conversions', gens: efl,
+      rappel: [
+        { t: 'Définitions', p: ['La puissance échangée entre deux composants est le produit de deux grandeurs : une <b>grandeur d’effort</b> e, qui tend à déplacer une quantité de matière, et une <b>grandeur de flux</b> f, qui traduit ce déplacement avec un certain « débit ».'], f: ['P = e × f'] },
+        { t: 'Effort et flux selon le domaine', tbl: [['Domaine', 'Effort', 'Flux'], ['Translation', 'Force F (N)', 'Vitesse V (m/s)'], ['Rotation', 'Couple C (N·m)', 'Vitesse angulaire Ω (rad/s)'], ['Hydraulique', 'Pression p (Pa)', 'Débit volumique Q (m³/s)'], ['Électrique (CC)', 'Tension U (V)', 'Intensité I (A)'], ['Thermique', 'Température T (K)', 'Flux thermique (W/K)']] },
+        { t: 'Conversions à connaître', f: ['1 bar = 10<sup>5</sup> Pa      1 L = 10<sup>−3</sup> m³', '1 L/min = 1 / 60 000 m³/s', '1 km/h = 1 / 3,6 m/s', 'Ω (rad/s) = 2π × N (tr/min) / 60'] },
+        { t: 'Démarche', p: ['Repère le domaine, écris P = effort × flux, convertis toutes les grandeurs en unités SI, puis isole l’inconnue. Il faut connaître trois éléments pour trouver le quatrième.'] }
+      ] },
+    { id: 'chp', name: 'Chaîne de puissance', sub: 'Alimenter, distribuer, convertir, transmettre ; chaîne d’information', gens: chp,
+      rappel: [
+        { t: 'Chaîne de puissance', f: ['Alimenter → Distribuer → Convertir → Transmettre → Agir'], p: ['Alimenter : batterie, panneaux, réseau. Distribuer : variateur, hacheur, relais. Convertir : moteur, vérin. Transmettre : réducteur, courroie, hélice, excentrique.'] },
+        { t: 'Chaîne d’information', f: ['Acquérir → Traiter → Communiquer'], p: ['Capteurs et codeurs acquièrent, la carte microcontrôleur ou l’automate traite, les interfaces (écran, radio, voyant) communiquent.'] },
+        { t: 'Remonter une chaîne', f: ['P<sub>entrée</sub> = P<sub>sortie</sub> / η<sub>global</sub>'], p: ['Sur chaque lien de puissance, indique la grandeur d’effort et la grandeur de flux avec leurs unités. Il faut connaître trois éléments pour trouver le quatrième.'] }
+      ] },
+    { id: 'mcc', name: 'Moteur à courant continu', sub: 'Modèle, couple, vitesse, bilan de puissance, MLI, servomoteur, pas à pas', gens: mcc,
+      rappel: [
+        { t: 'Modèle en régime permanent', f: ['U = E + R × I', 'E = K<sub>e</sub> × Ω        C<sub>em</sub> = K<sub>c</sub> × I', 'K<sub>e</sub> et K<sub>c</sub> sont numériquement égales en unités SI'] },
+        { t: 'Bilan de puissance', f: ['P<sub>a</sub> = U × I        P<sub>J</sub> = R × I²', 'P<sub>u</sub> = C<sub>u</sub> × Ω        η = P<sub>u</sub> / P<sub>a</sub>', 'Ω (rad/s) = 2π × N (tr/min) / 60'] },
+        { t: 'Commande', f: ['MLI : α = T<sub>H</sub> / T        U<sub>moy</sub> = α × U<sub>max</sub>', 'Servomoteur : 1 ms → −45°, 1,5 ms → 0°, 2 ms → +45° (période 20 à 50 ms)', 'Pas à pas : 200 pas par tour, soit 1,8° par pas (mode pas complet)'], p: ['Inverser le sens de rotation : intervertir les deux fils (pont en H). Le moteur est réversible et peut fonctionner en génératrice. Le couple et le courant sont maximaux au démarrage.'] }
+      ] },
+    { id: 'tra', name: 'Transmission mécanique', sub: 'Rapport de réduction, couple, rendement, réversibilité', gens: tra,
+      rappel: [
+        { t: 'Rapport de réduction', f: ['r = ω<sub>s</sub> / ω<sub>e</sub> = N<sub>s</sub> / N<sub>e</sub> = Z<sub>menant</sub> / Z<sub>mené</sub>', 'r<sub>total</sub> = r<sub>1</sub> × r<sub>2</sub> × …        rapport de transmission = 1 / r', 'D = m × Z'] },
+        { t: 'Puissance et rendement', f: ['P<sub>s</sub> = η × P<sub>e</sub>', 'C<sub>s</sub> × ω<sub>s</sub> = η × C<sub>e</sub> × ω<sub>e</sub>, donc C<sub>s</sub> = η × C<sub>e</sub> / r', 'V = Ω × R   (rotation → translation)'] },
+        { t: 'Réversibilité', p: ['Un système est réversible si le mouvement de sortie peut entraîner le mouvement d’entrée. Un réducteur à engrenages est en général réversible ; un vis-écrou à filet standard est irréversible.'] }
+      ] },
+    { id: 'acc', name: 'Accumulateurs et autonomie', sub: 'Capacité, énergie stockée, associations, autonomie, courant moyen', gens: acc,
+      rappel: [
+        { t: 'Capacité et énergie', f: ['E (Wh) = C (Ah) × U (V)', '1 Ah = 3600 C        1 Wh = 3600 J', 'Énergie massique = U × C / m   (Wh/kg)'] },
+        { t: 'Autonomie', f: ['t (h) = C (Ah) / I (A)', 'Capacité disponible : Q<sub>dispo</sub> = taux de décharge × C', 'I<sub>moy</sub> = aire sous la courbe de courant / T'] },
+        { t: 'Associations et source réelle', f: ['Série : tensions additionnées, capacité inchangée', 'Parallèle : capacités additionnées, tension inchangée', 'U<sub>s</sub> = U<sub>0</sub> − R × I<sub>s</sub>   (R : résistance interne)'] }
+      ] },
+    { id: 'doc', name: 'Lire un document technique', sub: 'Plaque signalétique, caractéristiques, profil de courant', gens: dc,
+      rappel: [
+        { t: 'Méthode de lecture d’un graphique', p: ['Repère les grandeurs et les unités des axes, puis l’échelle de la grille (graduations principales et secondaires). Lis les coordonnées des points marqués avant de calculer.'] },
+        { t: 'Ce qu’on lit', f: ['Plaque signalétique : valeurs nominales (U, I, N, P<sub>u</sub>), η = P<sub>u</sub> / (U × I)', 'Courbe U = f(I) d’une source : ordonnée à l’origine = U<sub>0</sub>, pente = − R', 'Courbe C = f(I) d’un moteur : pente = K<sub>c</sub>', 'Courant moyen d’un cycle : aire sous la courbe / durée du cycle'] }
+      ] }
+  ];
+
+  root.BANK = { NOTIONS, pick, shuffle, rnd, nf };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+(function () {
+  'use strict';
+  const B = window.BANK, NOTIONS = B.NOTIONS, nf = B.nf, shuffle = B.shuffle, pick = B.pick;
+  const $app = document.getElementById('app');
+  const NID = {}; NOTIONS.forEach(n => NID[n.id] = n);
+  const SHORT = { kir: 'Kirchhoff', enp: 'Énergie', efl: 'Effort/flux', chp: 'Chaîne', mcc: 'MCC', tra: 'Transmission', acc: 'Accus', doc: 'Documents' };
+  const GEN = {}; NOTIONS.forEach(n => n.gens.forEach(g => GEN[n.id + '.' + g.id] = { n, g }));
+  let NOM = '';
+  try { NOM = localStorage.getItem('si-t1-nom') || ''; } catch (e) { /* ignoré */ }
+  const dateFr = () => { const d = new Date(); return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /* ---------- état persistant ---------- */
+  let ME = { id: null, name: '' }, DB = null, USER = null, ADMIN = false, BOOTED = false, SYNC = 'local', MODE = 'claude';
+  let STATE = blank(), ALL = [], NAMES = {};
+  function blank() { return { v: 1, updated: 0, notions: {}, errors: {} }; }
+  const LSK = () => 'si-t1-fiche:' + (ME.id || 'anon');
+  function loadLocal() { try { const s = localStorage.getItem(LSK()); if (s) { const o = JSON.parse(s); if (o && o.v === 1) return o; } } catch (e) { /* stockage indisponible */ } return blank(); }
+  function saveLocal() { try { localStorage.setItem(LSK(), JSON.stringify(STATE)); } catch (e) { /* ignoré */ } }
+  const ns = id => STATE.notions[id] || (STATE.notions[id] = { h: '', n: 0, ok: 0, series: 0, last: null, best: 0 });
+  function mastery(st) { if (!st || !st.h) return null; let k = 0; for (const c of st.h) if (c === '1') k++; return k / st.h.length; }
+  function status(st) {
+    const m = mastery(st);
+    if (m == null) return { k: 'none', t: 'Pas commencé', c: '' };
+    if (st.h.length < 4) return { k: 'start', t: 'Démarrage', c: '' };
+    if (m >= .8 && st.h.length >= 6) return { k: 'good', t: 'Acquis', c: 'good' };
+    if (m >= .5) return { k: 'mid', t: 'En progrès', c: 'warn' };
+    return { k: 'low', t: 'À revoir', c: 'bad' };
+  }
+  function record(q, ok) {
+    const s = ns(q.nid); s.h = (s.h + (ok ? '1' : '0')).slice(-20); s.n++; if (ok) s.ok++;
+    const e = STATE.errors[q.gid] || (STATE.errors[q.gid] = [0, 0]); e[0]++; if (!ok) e[1]++;
+    persist();
+  }
+
+  /* ---------- Moodle / SCORM 1.2 (actif seulement si la page est lancée depuis un LMS) ---------- */
+  const LMS = (function () {
+    let api = null, t0 = Date.now(), closed = false;
+    function find(w) { for (let i = 0; w && i < 12; i++) { try { if (w.API) return w.API; } catch (e) { /* cadre d'un autre domaine */ } if (w === w.parent) break; w = w.parent; } return null; }
+    const get = k => { try { return String(api.LMSGetValue(k) || ''); } catch (e) { return ''; } };
+    const set = (k, v) => { try { api.LMSSetValue(k, String(v)); } catch (e) { /* ignoré */ } };
+    function init() {
+      api = find(window);
+      if (!api) { try { api = find(window.top); } catch (e) { api = null; } }
+      if (!api && window.opener) { try { api = find(window.opener); } catch (e) { api = null; } }
+      if (!api) return false;
+      try { if (String(api.LMSInitialize('')) === 'false') { api = null; return false; } } catch (e) { api = null; return false; }
+      if (/^(not attempted)?$/.test(get('cmi.core.lesson_status'))) set('cmi.core.lesson_status', 'incomplete');
+      return true;
+    }
+    function pack() {
+      const n = {}; Object.keys(STATE.notions).forEach(k => { const s = STATE.notions[k]; n[k] = [s.h, s.n, s.ok, s.series || 0, s.last == null ? -1 : s.last, s.best || 0]; });
+      let e = STATE.errors, s = JSON.stringify({ v: 1, u: STATE.updated, n, e });
+      if (s.length > 3800) { e = {}; Object.keys(STATE.errors).forEach(k => { if (STATE.errors[k][1] > 0) e[k] = STATE.errors[k]; }); s = JSON.stringify({ v: 1, u: STATE.updated, n, e }); }
+      if (s.length > 3800) s = JSON.stringify({ v: 1, u: STATE.updated, n, e: {} });
+      return s;
+    }
+    function unpack(s) {
+      try { const o = JSON.parse(s); if (!o || o.v !== 1) return null; const st = blank(); st.updated = o.u || 0; Object.keys(o.n || {}).forEach(k => { const a = o.n[k]; st.notions[k] = { h: a[0], n: a[1], ok: a[2], series: a[3], last: a[4] < 0 ? null : a[4], best: a[5] }; }); st.errors = o.e || {}; return st; } catch (e) { return null; }
+    }
+    function save() {
+      if (!api || closed) return;
+      set('cmi.suspend_data', pack());
+      const ms = NOTIONS.map(n => mastery(STATE.notions[n.id])), overall = Math.round(ms.reduce((s, m) => s + (m == null ? 0 : m), 0) / ms.length * 100);
+      set('cmi.core.score.min', 0); set('cmi.core.score.max', 100); set('cmi.core.score.raw', overall);
+      set('cmi.core.lesson_status', NOTIONS.every(n => ((STATE.notions[n.id] || {}).series || 0) > 0) ? 'completed' : 'incomplete');
+      NOTIONS.forEach((n, i) => {
+        const m = ms[i], k = status(STATE.notions[n.id]).k, p = 'cmi.objectives.' + i + '.';
+        set(p + 'id', n.id); set(p + 'score.raw', m == null ? 0 : Math.round(m * 100)); set(p + 'status', k === 'good' ? 'passed' : k === 'low' ? 'failed' : k === 'none' ? 'not attempted' : 'incomplete');
+      });
+      try { api.LMSCommit(''); } catch (e) { /* ignoré */ }
+    }
+    function finish() {
+      if (!api || closed) return; save(); closed = true;
+      const s = Math.round((Date.now() - t0) / 1000), p = x => (x < 10 ? '0' : '') + x;
+      set('cmi.core.session_time', p(Math.floor(s / 3600)) + ':' + p(Math.floor(s % 3600 / 60)) + ':' + p(s % 60)); set('cmi.core.exit', 'suspend');
+      try { api.LMSCommit(''); api.LMSFinish(''); } catch (e) { /* ignoré */ }
+    }
+    function name() { const n = get('cmi.core.student_name'); if (n.indexOf(',') > 0) { const a = n.split(','); return (a.slice(1).join(',').trim() + ' ' + a[0].trim()).trim(); } return n.trim(); }
+    return { init, save, finish, name, id: () => get('cmi.core.student_id'), load: () => unpack(get('cmi.suspend_data')), ok: () => !!api };
+  })();
+  let lmsT = null;
+
+  /* synchronisation avec la base partagée (une écriture à la fois) */
+  let saveT = null, saving = false, dirty = false, syncOff = false;
+  function persist() { STATE.updated = Date.now(); saveLocal(); if (MODE === 'scorm') { clearTimeout(lmsT); lmsT = setTimeout(LMS.save, 800); } dirty = true; if (DB && ME.id && !syncOff) { clearTimeout(saveT); saveT = setTimeout(flush, 1200); } }
+  async function flush() {
+    if (!DB || !ME.id || syncOff || !dirty) return;
+    if (saving) { saveT = setTimeout(flush, 600); return; }
+    saving = true; dirty = false;
+    try { await DB.doc('results/' + ME.id).set(STATE); SYNC = 'ok'; }
+    catch (e) { if (e && (e.code === 'invalid_argument' || e.code === 'revoked' || e.code === 'not_granted')) { syncOff = true; SYNC = 'off'; } else { dirty = true; SYNC = 'err'; } }
+    saving = false; if (S.view === 'home') render();
+  }
+  async function boot() {
+    if (window.__STANDALONE) {
+      if (LMS.init()) {
+        MODE = 'scorm'; const nm = LMS.name(), sid = LMS.id(); ME = { id: sid ? 'lms:' + sid : null, name: nm };
+        STATE = loadLocal(); const r = LMS.load();
+        if (r && (r.updated || 0) > (STATE.updated || 0)) { STATE = r; saveLocal(); } else if (STATE.updated) LMS.save();
+        window.addEventListener('pagehide', LMS.finish); window.addEventListener('beforeunload', LMS.finish);
+      } else { MODE = 'local'; STATE = loadLocal(); }
+      BOOTED = true; render(); return;
+    }
+    for (let i = 0; i < 8 && !(window.claude && window.claude.use); i++) await new Promise(r => setTimeout(r, 250));
+    try {
+      if (window.claude && window.claude.use) {
+        try { USER = await window.claude.use('user'); } catch (e) { USER = null; }
+        try { DB = await window.claude.use('db'); } catch (e) { DB = null; }
+        if (USER) { try { const m = await USER.me(); ME = { id: m.id, name: m.name || '' }; ADMIN = await USER.canEdit(); } catch (e) { /* identité absente */ } }
+      }
+      STATE = loadLocal();
+      if (DB && ME.id) {
+        SYNC = 'ok';
+        try {
+          const snap = await DB.doc('results/' + ME.id).get();
+          if (snap.exists) { const r = snap.data(); if (r && r.v === 1 && (r.updated || 0) > (STATE.updated || 0)) { STATE = JSON.parse(JSON.stringify(r)); saveLocal(); } else if ((STATE.updated || 0) > ((r && r.updated) || 0)) { dirty = true; flush(); } }
+          else if (STATE.updated) { dirty = true; flush(); }
+        } catch (e) { SYNC = 'err'; }
+        if (ADMIN) { try { DB.collection('results').onSnapshot(snap => { ALL = snap.docs.map(d => ({ id: d.id, data: d.data() })); if (S.view === 'suivi') render(); }, () => { /* abonnement interrompu */ }); } catch (e) { /* ignoré */ } }
+      }
+    } catch (e) { /* mode hors suivi */ }
+    BOOTED = true; render();
+  }
+
+  /* ---------- séries de questions ---------- */
+  let S = { view: 'home', focus: null };
+  function inst(n, g) { const q = g.make(); q.nid = n.id; q.gid = n.id + '.' + g.id; q.label = g.label; q.kind = g.kind; q.done = false; q.val = ''; q.sel = null; if (q.kind === 'class') q.place = q.items.map(() => null); return q; }
+  function buildSeries(n, size) {
+    size = size || 6;
+    const non = shuffle(n.gens.filter(g => g.kind !== 'qcm')), qc = shuffle(n.gens.filter(g => g.kind === 'qcm'));
+    const m = Math.min(qc.length, 2), k = Math.min(non.length, size - m);
+    let gs = non.slice(0, k).concat(qc.slice(0, m)); if (gs.length < size) gs = gs.concat(qc.slice(m, m + size - gs.length));
+    return shuffle(gs).map(g => inst(n, g));
+  }
+  function buildGeneral() {
+    let list = []; NOTIONS.forEach(n => { const non = n.gens.filter(g => g.kind !== 'qcm'), qc = n.gens.filter(g => g.kind === 'qcm'); list.push({ n, g: pick(Math.random() < .65 && non.length ? non : qc) }); });
+    const used = {}; list.forEach(x => used[x.n.id + x.g.id] = 1);
+    let guard = 0; while (list.length < 10 && guard++ < 100) { const n = pick(NOTIONS), g = pick(n.gens); if (!used[n.id + g.id]) { used[n.id + g.id] = 1; list.push({ n, g }); } }
+    return shuffle(list).map(x => inst(x.n, x.g));
+  }
+  function start(nid) { S = { view: 'series', nid, qs: nid ? buildSeries(NID[nid]) : buildGeneral(), i: 0, sel: null, focus: null }; firstFocus(); render(); }
+  function firstFocus() { const q = S.qs[S.i]; S.focus = q && q.kind === 'num' ? '#ans' : null; }
+  const cur = () => S.qs[S.i];
+
+  function parseNum(s) { s = String(s).trim().replace(/[\s  ]/g, '').replace(',', '.').replace('−', '-'); if (!/^-?\d*\.?\d+(e-?\d+)?$/i.test(s)) return NaN; return parseFloat(s); }
+  function check() {
+    const q = cur(); if (!q || q.done) return;
+    if (q.kind === 'num') {
+      const v = parseNum(q.val);
+      if (isNaN(v)) { q.msg = 'Entre un nombre, par exemple 12,5.'; S.focus = '#ans'; render(); return; }
+      const tol = Math.max(Math.abs(q.ans) * q.tol, q.abs || 0, 1e-9);
+      q.v = v; q.ok = Math.abs(v - q.ans) <= tol; q.msg = '';
+      if (!q.ok) { const t = (q.traps || []).find(t => Math.abs(v - t.v) <= Math.max(Math.abs(t.v) * .02, 1e-9)); q.trap = t ? t.msg : ''; }
+    } else if (q.kind === 'qcm') {
+      if (q.sel == null) return; q.ok = q.sel === q.correct;
+    } else {
+      if (q.place.some(p => p == null)) return; q.ok = q.items.every((it, i) => q.place[i] === it.c);
+    }
+    q.done = true; record(q, q.ok); S.focus = '#nextbtn'; render();
+  }
+  function next() {
+    if (S.i < S.qs.length - 1) { S.i++; S.sel = null; firstFocus(); render(); window.scrollTo(0, 0); return; }
+    const ok = S.qs.filter(q => q.ok).length, pct = Math.round(ok / S.qs.length * 100);
+    if (S.nid) { const s = ns(S.nid); s.series++; s.last = pct; s.best = Math.max(s.best || 0, pct); persist(); }
+    S.view = 'bilan'; S.pct = pct; S.ok = ok; S.focus = null; render(); window.scrollTo(0, 0);
+  }
+
+  /* ---------- vues ---------- */
+  function masteryLine() { return NOTIONS.map(n => { const m = mastery(STATE.notions[n.id]); return SHORT[n.id] + ' ' + (m == null ? '—' : Math.round(m * 100) + ' %'); }).join(' · '); }
+  const nomLine = () => 'Élève : ' + (NOM || ME.name || '(nom à compléter)');
+  function textSeries() {
+    const wrong = Array.from(new Set(S.qs.filter(q => !q.ok).map(q => q.label)));
+    return ['Fiche de révision T1 — ' + (S.nid ? NID[S.nid].name : 'Révision générale'), nomLine(), 'Date : ' + dateFr(), 'Série : ' + S.ok + '/' + S.qs.length + ' (' + S.pct + ' %)', 'À revoir : ' + (wrong.length ? wrong.join(' ; ') : 'rien, série réussie'), 'Maîtrise actuelle (20 dernières réponses) : ' + masteryLine()].join('\n');
+  }
+  function textGlobal() {
+    const lines = NOTIONS.map(n => { const st = STATE.notions[n.id], m = mastery(st), stt = status(st); return '- ' + n.name + ' : ' + (m == null ? 'pas commencé' : Math.round(m * 100) + ' % (' + stt.t.toLowerCase() + ', ' + st.n + ' réponses, ' + (st.series || 0) + ' série' + ((st.series || 0) > 1 ? 's' : '') + ')'); });
+    return ['Fiche de révision T1 — bilan global', nomLine(), 'Date : ' + dateFr(), 'Maîtrise sur les 20 dernières réponses de chaque notion :'].concat(lines).join('\n');
+  }
+  function sendBox(text) {
+    return `<section class="sec"><h3>Bilan à envoyer à ton enseignant</h3><div class="ans"><label for="nom">Ton nom</label><input id="nom" class="wide" autocomplete="name" value="${esc(NOM || ME.name || '')}" placeholder="Prénom Nom"></div><textarea id="txt" class="txt" readonly rows="8" aria-label="Texte du bilan">${esc(text)}</textarea><div class="row"><button class="btn" data-act="copy">Copier le bilan</button><span class="dim" id="cpmsg" role="status"></span></div><p class="hintline">Colle ce texte dans Pronote, l’ENT ou un mail.</p></section>`;
+  }
+  function recap() {
+    return `<button class="back" data-act="home">← Toutes les notions</button><h1 class="title">Mon bilan</h1>${sendBox(textGlobal())}`;
+  }
+  function nav() {
+    const learn = S.view !== 'suivi';
+    return `<nav class="nav"><div class="eyebrow">Terminale SI · Séquence T1</div><div class="tabs"><button class="tab" data-act="home" ${learn ? 'aria-current="page"' : ''}>Réviser</button>${ADMIN ? `<button class="tab" data-act="suivi" ${!learn ? 'aria-current="page"' : ''}>Suivi de la classe</button>` : ''}</div></nav>`;
+  }
+  function syncNote() {
+    if (!BOOTED) return '';
+    if (MODE === 'scorm') return '';
+    if (!DB || !ME.id) return '<p class="note">Tes résultats restent sur cet appareil. Utilise « Mon bilan à envoyer » pour les transmettre à ton enseignant.</p>';
+    if (SYNC === 'off') return '<p class="note">Ton accès est en lecture seule : tes résultats ne sont pas transmis à ton enseignant et restent sur cet appareil.</p>';
+    if (SYNC === 'err') return '<p class="note">La transmission de tes résultats a échoué. Elle sera retentée à ta prochaine réponse.</p>';
+    return '';
+  }
+  function cardHtml(n) {
+    const st = STATE.notions[n.id], stt = status(st), m = mastery(st), pct = m == null ? '—' : Math.round(m * 100) + ' %';
+    return `<article class="card"><div><h2>${n.name}</h2><p>${n.sub}</p></div><div class="meter"><div class="bar ${stt.c}" role="img" aria-label="Maîtrise ${pct}"><i style="width:${m == null ? 0 : Math.round(m * 100)}%"></i></div><span class="pct">${pct}</span></div><div class="row"><span class="pill ${stt.c}">${stt.t}</span>${st && st.series ? `<span class="dim">${st.series} série${st.series > 1 ? 's' : ''} · meilleur ${st.best} %</span>` : ''}</div><div class="row"><button class="btn" data-act="start" data-n="${n.id}">S’entraîner</button><button class="btn ghost" data-act="rappel" data-n="${n.id}">À retenir</button></div></article>`;
+  }
+  function home() {
+    const done = NOTIONS.filter(n => status(STATE.notions[n.id]).k === 'good').length;
+    const total = NOTIONS.reduce((s, n) => s + ((STATE.notions[n.id] || {}).n || 0), 0);
+    return `<section class="hero"><div><div class="eyebrow">Fiche de révision interactive</div><h1>Chaîne de puissance et énergie</h1><p>Entraîne-toi notion par notion. Les valeurs changent à chaque essai et chaque réponse est corrigée aussitôt, avec la méthode.</p></div><div class="score"><b>${done}<small>/${NOTIONS.length}</small></b><span>notions acquises · ${total} réponse${total > 1 ? 's' : ''} données</span><div class="row end"><button class="btn ghost" data-act="recap">Mon bilan à envoyer</button></div></div></section>${syncNote()}<div class="grid">${NOTIONS.map(cardHtml).join('')}</div><article class="card general"><div><h2>Révision générale</h2><p>10 questions mêlées sur toutes les notions, comme avant une évaluation.</p></div><button class="btn" data-act="start" data-n="">Lancer les 10 questions</button></article>`;
+  }
+  function rappel() {
+    const n = NID[S.nid];
+    const sec = n.rappel.map(s => {
+      let h = `<section class="sec"><h3>${s.t}</h3>`;
+      (s.f || []).forEach(f => h += `<div class="f">${f}</div>`);
+      (s.p || []).forEach(p => h += `<p>${p}</p>`);
+      if (s.tbl) h += '<div class="tblwrap"><table class="rap">' + s.tbl.map((r, k) => '<tr>' + r.map(c => k ? `<td>${c}</td>` : `<th>${c}</th>`).join('') + '</tr>').join('') + '</table></div>';
+      return h + '</section>';
+    }).join('');
+    return `<button class="back" data-act="home">← Toutes les notions</button><h1 class="title">${n.name}</h1>${sec}<div class="row"><button class="btn" data-act="start" data-n="${n.id}">S’entraîner sur cette notion</button></div>`;
+  }
+  const kindLabel = q => q.nid === 'doc' ? 'Lecture de document' : q.kind === 'num' ? 'Calcul' : q.kind === 'qcm' ? 'QCM' : 'Classement';
+  function body(q) {
+    let h = q.html;
+    if (q.kind === 'qcm') {
+      h += '<div class="opts">' + q.options.map((o, i) => {
+        let c = 'opt', tag = '';
+        if (q.done) { if (i === q.correct) { c += ' right'; tag = '✓ Bonne réponse'; } else if (i === q.sel) { c += ' wrong'; tag = '✗ Ta réponse'; } } else if (q.sel === i) c += ' sel';
+        return `<button class="${c}" data-act="opt" data-i="${i}" data-opt="${i}" ${q.done ? 'disabled' : ''}><span class="l">${'ABCD'[i]}</span><span>${o}</span><span class="tag">${tag}</span></button>`;
+      }).join('') + '</div>';
+      if (!q.done) h += `<div class="ans"><button class="btn" data-act="check" ${q.sel == null ? 'disabled' : ''}>Valider</button></div>`;
+    } else if (q.kind === 'num') {
+      h += `<form class="ans" data-form="num"><label for="ans">Ta réponse</label><input id="ans" name="ans" inputmode="decimal" autocomplete="off" value="${esc(q.val)}" ${q.done ? 'disabled' : ''} aria-describedby="u"><span class="unit" id="u">${q.unit || '(sans unité)'}</span>${q.done ? '' : '<button class="btn" type="submit">Valider</button>'}</form>`;
+      if (q.msg) h += `<p class="err">${q.msg}</p>`;
+    } else {
+      const placed = c => q.items.map((it, i) => ({ it, i })).filter(x => q.place[x.i] === c);
+      const chip = (x, extra) => { let c = 'chip', t = x.it.t; if (q.done) { const right = q.place[x.i] === x.it.c; c += right ? ' right' : ' wrong'; t = (right ? '✓ ' : '✗ ') + t + (right ? '' : ` <small>→ ${q.cats[x.it.c]}</small>`); } else if (S.sel === x.i) c += ' sel'; return `<button class="${c}" data-act="chip" data-i="${x.i}" data-chip="${x.i}" draggable="${!q.done}" ${q.done ? 'disabled' : ''}>${t}</button>`; };
+      const bank = q.items.map((it, i) => ({ it, i })).filter(x => q.place[x.i] == null);
+      h += `<p class="hintline">${q.done ? '' : 'Touche un élément, puis la zone où le placer. Tu peux aussi le glisser-déposer.'}</p>`;
+      if (!q.done) h += `<div class="bank" aria-label="Éléments à classer">${bank.length ? bank.map(x => chip(x)).join('') : '<span class="dim">Tout est placé : tu peux valider.</span>'}</div>`;
+      h += '<div class="zones">' + q.cats.map((c, k) => `<div class="zone ${S.sel != null ? 'armed' : ''}" role="group" aria-label="Zone ${esc(c)}" tabindex="${q.done ? -1 : 0}" data-act="zone" data-c="${k}" data-zone="${k}"><b>${c}</b><div class="in">${placed(k).map(x => chip(x)).join('')}</div></div>`).join('') + '</div>';
+      if (!q.done) h += `<div class="ans"><button class="btn" data-act="check" ${q.place.some(p => p == null) ? 'disabled' : ''}>Valider</button></div>`;
+    }
+    return h;
+  }
+  function feedback(q) {
+    const nb = S.i === S.qs.length - 1;
+    let h = `<div class="fb ${q.ok ? 'ok' : 'ko'}" role="status"><h4>${q.ok ? 'Bonne réponse' : 'Ce n’est pas ça'}</h4>`;
+    if (q.kind === 'num' && !q.ok) h += `<p>Ta réponse : <b>${nf(q.v, 6)} ${q.unit || ''}</b></p>`;
+    if (!q.ok && q.trap) h += `<p>${q.trap}</p>`;
+    h += `<p class="sol">${q.sol}</p></div><div class="next"><button class="btn" id="nextbtn" data-act="next">${nb ? 'Voir le bilan' : 'Question suivante'}</button></div>`;
+    return h;
+  }
+  function series() {
+    const q = cur(), title = S.nid ? NID[S.nid].name : 'Révision générale';
+    const steps = S.qs.map((x, k) => `<i class="${k === S.i ? (x.done ? (x.ok ? 'ok' : 'ko') : 'cur') : x.done ? (x.ok ? 'ok' : 'ko') : ''}"></i>`).join('');
+    return `<button class="back" data-act="home">← Quitter la série</button><div class="qhead"><strong>${title}</strong><span class="dim">Question ${S.i + 1} sur ${S.qs.length}</span></div><div class="steps" aria-hidden="true">${steps}</div><div class="q"><div class="kind">${kindLabel(q)}${S.nid ? '' : ' · ' + SHORT[q.nid]}</div>${body(q)}${q.done ? feedback(q) : ''}</div>`;
+  }
+  function bilan() {
+    const msg = S.pct >= 80 ? 'Très bien, cette notion est solide.' : S.pct >= 50 ? 'C’est en bonne voie. Relis les corrections puis refais une série.' : 'Prends le temps de relire « À retenir », puis refais une série.';
+    const wrong = {}; S.qs.filter(q => !q.ok).forEach(q => wrong[q.nid] = 1);
+    const rev = Object.keys(wrong).map(id => `<button class="btn ghost" data-act="rappel" data-n="${id}">Relire : ${NID[id].name}</button>`).join('');
+    return `<h1 class="title">Bilan de la série</h1><div class="sec"><div class="big">${S.ok}<small style="font-size:.5em;color:var(--ink-2)"> / ${S.qs.length}</small></div><p>${msg}</p></div><ul class="rec">${S.qs.map(q => `<li><span class="m ${q.ok ? 'ok' : 'ko'}">${q.ok ? '✓ Juste' : '✗ À revoir'}</span><span>${q.label}${S.nid ? '' : ` <span class="dim">· ${NID[q.nid].name}</span>`}</span></li>`).join('')}</ul>${sendBox(textSeries())}<div class="row"><button class="btn" data-act="start" data-n="${S.nid || ''}">Refaire une série</button>${rev}<button class="btn ghost" data-act="home">Toutes les notions</button></div>`;
+  }
+  function suivi() {
+    if (!DB) return '<div class="empty">Le suivi de la classe est disponible quand la page est ouverte avec ton compte enseignant.</div>';
+    const docs = ALL.filter(d => d.data && d.data.v === 1 && d.data.notions);
+    if (!docs.length) return '<h1 class="title">Suivi de la classe</h1><div class="empty">Aucun résultat pour l’instant. Les élèves apparaissent ici dès leur première réponse, s’ils ouvrent le lien avec leur compte (accès Contributeur).</div>';
+    docs.sort((a, b) => (b.data.updated || 0) - (a.data.updated || 0));
+    const avg = NOTIONS.map(n => { const ms = docs.map(d => mastery(d.data.notions[n.id])).filter(m => m != null); return { n, k: ms.length, m: ms.length ? ms.reduce((s, x) => s + x, 0) / ms.length : null }; });
+    const withData = avg.filter(a => a.m != null).sort((a, b) => a.m - b.m), weak = withData[0];
+    const cls = m => m == null ? '' : m >= .8 ? 'good' : m >= .5 ? 'warn' : 'bad';
+    const head = '<tr><th>Élève</th>' + NOTIONS.map(n => `<th title="${n.name}">${SHORT[n.id]}</th>`).join('') + '<th>Dernière activité</th><th>À revoir</th></tr>';
+    const rows = docs.map((d, k) => {
+      const cells = NOTIONS.map(n => { const st = d.data.notions[n.id], m = mastery(st); return m == null ? '<td class="c"><span class="cell">—</span></td>' : `<td class="c"><span class="cell ${cls(m)}">${Math.round(m * 100)} %</span><div class="dim">${st.n} rép.</div></td>`; }).join('');
+      const low = NOTIONS.filter(n => status(d.data.notions[n.id]).k === 'low').map(n => `<span class="pill bad">${SHORT[n.id]}</span>`).join(' ');
+      const dt = d.data.updated ? new Date(d.data.updated) : null;
+      return `<tr><td><span data-uid="${esc(d.id)}" data-k="${k + 1}">Élève ${k + 1}</span>${d.id === ME.id ? ' <span class="dim">(toi)</span>' : ''}</td>${cells}<td class="dim">${dt ? dt.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) + ' ' + dt.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '—'}</td><td>${low || '<span class="dim">—</span>'}</td></tr>`;
+    }).join('');
+    const avgRow = '<tr class="avg"><td>Moyenne de la classe</td>' + avg.map(a => `<td class="c">${a.m == null ? '—' : `<span class="cell ${cls(a.m)}">${Math.round(a.m * 100)} %</span>`}</td>`).join('') + '<td></td><td></td></tr>';
+    const agg = {}; docs.forEach(d => Object.keys(d.data.errors || {}).forEach(g => { const e = d.data.errors[g]; const a = agg[g] || (agg[g] = [0, 0]); a[0] += e[0]; a[1] += e[1]; }));
+    const hard = Object.keys(agg).filter(g => GEN[g] && agg[g][0] >= 3 && agg[g][1] > 0).sort((a, b) => agg[b][1] / agg[b][0] - agg[a][1] / agg[a][0] || agg[b][1] - agg[a][1]).slice(0, 6);
+    const totalAns = docs.reduce((s, d) => s + NOTIONS.reduce((t, n) => t + ((d.data.notions[n.id] || {}).n || 0), 0), 0);
+    return `<h1 class="title">Suivi de la classe</h1><p class="dim">${docs.length} élève${docs.length > 1 ? 's' : ''} · ${totalAns} réponses${weak ? ` · notion la plus fragile : <b>${weak.n.name}</b> (${Math.round(weak.m * 100)} % en moyenne)` : ''}. La maîtrise porte sur les 20 dernières réponses de chaque notion.</p><div class="dash"><table class="dt">${head}${rows}${avgRow}</table></div>${hard.length ? `<section class="sec" style="margin-top:14px"><h3>Points durs de la classe</h3><ul class="hard">${hard.map(g => `<li><span class="m">${Math.round(agg[g][1] / agg[g][0] * 100)} %</span><span>${GEN[g].g.label} <span class="dim">· ${GEN[g].n.name} · ${agg[g][1]} erreur${agg[g][1] > 1 ? 's' : ''} sur ${agg[g][0]}</span></span></li>`).join('')}</ul></section>` : ''}`;
+  }
+
+  async function fillNames() {
+    const spans = Array.from($app.querySelectorAll('[data-uid]')); if (!spans.length || !USER) return;
+    const ids = spans.map(s => s.getAttribute('data-uid'));
+    try {
+      const ps = await USER.profiles(ids);
+      spans.forEach(s => { const id = s.getAttribute('data-uid'), p = ps[id]; const nm = p && p.name; if (nm) { s.textContent = nm; } });
+    } catch (e) { /* noms indisponibles */ }
+  }
+  function render() {
+    const v = S.view;
+    const main = v === 'home' ? home() : v === 'rappel' ? rappel() : v === 'series' ? series() : v === 'bilan' ? bilan() : v === 'recap' ? recap() : suivi();
+    $app.innerHTML = `<div class="wrap">${nav()}${main}<footer class="foot">M. Montezume — Sciences de l’Ingénieur — Lycée Chevalier de Saint-Georges</footer></div>`;
+    if (v === 'suivi') fillNames();
+    if (S.focus) { const el = $app.querySelector(S.focus); S.focus = null; if (el) { try { el.focus({ preventScroll: false }); } catch (e) { el.focus(); } } }
+  }
+
+  /* ---------- événements ---------- */
+  function place(i, c) { const q = cur(); if (!q || q.done || i == null) return; q.place[i] = c; S.sel = null; S.focus = '[data-zone="' + c + '"]'; render(); }
+  $app.addEventListener('click', ev => {
+    const t = ev.target.closest('[data-act]'); if (!t || t.disabled) return;
+    const a = t.getAttribute('data-act'), q = S.view === 'series' ? cur() : null;
+    if (a === 'home') { S = { view: 'home' }; render(); window.scrollTo(0, 0); }
+    else if (a === 'recap') { S = { view: 'recap' }; render(); window.scrollTo(0, 0); }
+    else if (a === 'copy') copyBilan();
+    else if (a === 'suivi') { S = { view: 'suivi' }; render(); }
+    else if (a === 'rappel') { S = { view: 'rappel', nid: t.getAttribute('data-n') }; render(); window.scrollTo(0, 0); }
+    else if (a === 'start') { start(t.getAttribute('data-n') || null); window.scrollTo(0, 0); }
+    else if (a === 'opt' && q && !q.done) { q.sel = +t.getAttribute('data-i'); S.focus = '[data-opt="' + q.sel + '"]'; render(); }
+    else if (a === 'check') check();
+    else if (a === 'next') next();
+    else if (a === 'chip' && q && !q.done) {
+      const i = +t.getAttribute('data-i');
+      if (q.place[i] != null && S.sel != null && S.sel !== i) { place(S.sel, q.place[i]); return; }
+      if (q.place[i] != null) { q.place[i] = null; S.sel = i; S.focus = '[data-chip="' + i + '"]'; } else { S.sel = S.sel === i ? null : i; S.focus = '[data-chip="' + i + '"]'; }
+      render();
+    }
+    else if (a === 'zone' && q && !q.done && S.sel != null) place(S.sel, +t.getAttribute('data-c'));
+  });
+  $app.addEventListener('keydown', ev => {
+    const z = ev.target.closest && ev.target.closest('[data-zone]');
+    if (z && ev.target === z && (ev.key === 'Enter' || ev.key === ' ')) { ev.preventDefault(); const q = cur(); if (q && !q.done && S.sel != null) place(S.sel, +z.getAttribute('data-c')); }
+  });
+  $app.addEventListener('input', ev => {
+    if (ev.target.id === 'ans') { const q = cur(); if (q) q.val = ev.target.value; }
+    else if (ev.target.id === 'nom') {
+      NOM = ev.target.value.trim(); try { localStorage.setItem('si-t1-nom', NOM); } catch (e) { /* ignoré */ }
+      const ta = $app.querySelector('#txt'); if (ta) ta.value = S.view === 'bilan' ? textSeries() : textGlobal();
+    }
+  });
+  function copyBilan() {
+    const ta = $app.querySelector('#txt'), msg = $app.querySelector('#cpmsg'); if (!ta) return;
+    const manual = () => { ta.focus(); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e) { /* ignoré */ } if (msg) msg.textContent = ok ? 'Bilan copié.' : 'Le texte est sélectionné : copie-le avec Ctrl+C (ou en appui long sur mobile).'; };
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(ta.value).then(() => { if (msg) msg.textContent = 'Bilan copié.'; }, manual); } else manual();
+  }
+  $app.addEventListener('submit', ev => { ev.preventDefault(); if (ev.target.getAttribute('data-form') === 'num') { const q = cur(), inp = $app.querySelector('#ans'); if (q && inp) q.val = inp.value; check(); } });
+  let drag = null;
+  $app.addEventListener('dragstart', ev => { const c = ev.target.closest && ev.target.closest('[data-chip]'); if (!c) return; drag = +c.getAttribute('data-chip'); try { ev.dataTransfer.setData('text/plain', String(drag)); ev.dataTransfer.effectAllowed = 'move'; } catch (e) { /* ignoré */ } });
+  $app.addEventListener('dragover', ev => { const z = ev.target.closest && ev.target.closest('[data-zone]'); if (z && drag != null) { ev.preventDefault(); z.classList.add('over'); } });
+  $app.addEventListener('dragleave', ev => { const z = ev.target.closest && ev.target.closest('[data-zone]'); if (z) z.classList.remove('over'); });
+  $app.addEventListener('drop', ev => { const z = ev.target.closest && ev.target.closest('[data-zone]'); if (z && drag != null) { ev.preventDefault(); const i = drag; drag = null; place(i, +z.getAttribute('data-c')); } });
+  $app.addEventListener('dragend', () => { drag = null; });
+
+  STATE = loadLocal();
+  render();
+  boot();
+})();
+
+</script>
+</body>
+</html>
